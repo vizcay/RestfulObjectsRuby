@@ -1,6 +1,7 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
-describe RestfulObjects::Type do
+describe '/domain-types/:type/collections/:collection' do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
   end
@@ -41,3 +42,4 @@ describe RestfulObjects::Type do
     last_response.body.should match_json_expression expected
   end
 end
+
