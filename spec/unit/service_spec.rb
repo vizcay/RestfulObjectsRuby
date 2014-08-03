@@ -1,4 +1,5 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
 describe RestfulObjects::Service do
   before :all do
@@ -121,3 +122,4 @@ describe RestfulObjects::Service do
     model.services['InitializedService'].title.should eq 'A title'
   end
 end
+

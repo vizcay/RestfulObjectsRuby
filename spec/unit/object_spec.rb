@@ -1,4 +1,5 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
 describe RestfulObjects::Object do
   before :all do
@@ -224,3 +225,4 @@ describe RestfulObjects::Object do
     obj.destroyed.should be_true
   end
 end
+

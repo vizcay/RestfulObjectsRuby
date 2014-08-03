@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../spec_helper'
 
 describe RestfulObjects::ObjectProperties do
   before :all do
@@ -203,3 +203,4 @@ describe RestfulObjects::ObjectProperties do
     last_response.body.should match_json_expression expected
   end
 end
+

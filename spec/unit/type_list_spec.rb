@@ -1,4 +1,5 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
 describe RestfulObjects::TypeList do
   before(:all) do
@@ -33,3 +34,4 @@ describe RestfulObjects::TypeList do
     RestfulObjects::DomainModel.current.types.get_representation
   end
 end
+

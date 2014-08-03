@@ -1,4 +1,5 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
 describe RestfulObjects::ObjectActions do
   before :all do
@@ -376,3 +377,4 @@ describe RestfulObjects::ObjectActions do
     last_response.body.should match_json_expression expected
   end
 end
+

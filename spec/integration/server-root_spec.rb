@@ -1,6 +1,7 @@
-require_relative 'spec_helper'
+# encoding: utf-8
+require_relative '../spec_helper'
 
-describe RestfulObjects::Server do
+describe '/' do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
   end
