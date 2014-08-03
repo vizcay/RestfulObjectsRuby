@@ -30,5 +30,5 @@ require_relative 'restful_objects/type'
 require_relative 'restful_objects/type_list'
 require_relative 'restful_objects/service'
 require_relative 'restful_objects/service_list'
-require_relative 'restful_objects/model'
+require_relative 'restful_objects/domain_model'
 
