@@ -44,7 +44,8 @@ class Graph
   end
 end
 ```
- 
+You can check this example and more [here](https://github.com/vizcay/RestfulObjectsRubyExamples).
+
 ### How to install it?
 Run
 
@@ -64,7 +65,7 @@ to your's project Gemfile and 'bundle install' it.
 The source quality is at alpha state, and it was created mostly as a proof of concept. Still is has plenty of specs and a big percentage of the specification implemented, the grey areas are mostly related to errors and validations. It has been developed with MRI and hasn't been tested on other Ruby implementations.
 
 ### Dependencies
-- [Ruby 1.9.3 or higher](https://www.ruby-lang.org/‎)
+- [Ruby 1.9.3 or higher](https://www.ruby-lang.org/)
 - [Sinatra](http://www.sinatrarb.com/)
 - [RSpec](http://rspec.info/)
 - [json_expressions](https://github.com/chancancode/json_expressions) for json testing.
