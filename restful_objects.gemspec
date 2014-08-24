@@ -13,28 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/vizcay/RestfulObjectsRuby"
   spec.license       = "MIT"
 
-  spec.files         = ["lib/restful_objects/action_description.rb",
-                        "lib/restful_objects/action_list.rb",
-                        "lib/restful_objects/collection_description.rb",
-                        "lib/restful_objects/collection_list.rb",
-                        "lib/restful_objects/http_response.rb",
-                        "lib/restful_objects/link_generator.rb",
-                        "lib/restful_objects/model.rb",
-                        "lib/restful_objects/object.rb",
-                        "lib/restful_objects/object_actions.rb",
-                        "lib/restful_objects/object_collections.rb",
-                        "lib/restful_objects/object_list.rb",
-                        "lib/restful_objects/object_macros.rb",
-                        "lib/restful_objects/object_properties.rb",
-                        "lib/restful_objects/parameter_description.rb",
-                        "lib/restful_objects/parameter_description_list.rb",
-                        "lib/restful_objects/property_list.rb",
-                        "lib/restful_objects/server.rb",
-                        "lib/restful_objects/service_list.rb",
-                        "lib/restful_objects/type.rb",
-                        "lib/restful_objects/type_list.rb",
-                        "lib/restful_objects/user.rb",
-                        "lib/restful_objects/version.rb"]
+  spec.files         = Dir.glob("{bin,lib,spec}/**/*") + %w(LICENSE README.md)
 
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
