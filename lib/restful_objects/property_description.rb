@@ -6,7 +6,7 @@ module RestfulObjects
                   :max_length, :disabled_reason, :pattern
 
     def initialize(id, domain_type, return_type, options)
-      raise "property type #{return_type} usupported" if not [:string, :int, :decimal, :date, :blob].include?(return_type)
+      raise "property type #{return_type} usupported" if not [:string, :int, :bool, :decimal, :date, :blob].include?(return_type)
 
       @id = id
       @domain_type = domain_type

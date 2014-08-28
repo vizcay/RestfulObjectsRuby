@@ -9,7 +9,7 @@ describe '/domain-types/:type/actions/:action' do
   it 'should generate an action description representation' do
     class ActionTest
       include RestfulObjects::Object
-      action :do_something, :int, {}, friendly_name: 'do something!', description: 'description of something'
+      action :do_something, return_type: :int, friendly_name: 'do something!', description: 'description of something'
     end
 
     expected = {

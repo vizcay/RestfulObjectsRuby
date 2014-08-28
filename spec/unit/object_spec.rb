@@ -18,7 +18,7 @@ describe RestfulObjects::Object do
       property :id, :int, read_only: true
       property :password, :string, max_length: 10
 
-      action :hash_password, :string
+      action :hash_password, return_type: :string
 
       collection :addresses, Address
 
@@ -34,8 +34,8 @@ describe RestfulObjects::Object do
   end
 
   it 'module should add class macros functionality' do
-    @object.class.respond_to?(:property).should be_true
-    @object.class.respond_to?(:action).should be_true
+    @object.class.respond_to?(:property).should   be_true
+    @object.class.respond_to?(:action).should     be_true
     @object.class.respond_to?(:collection).should be_true
   end
 

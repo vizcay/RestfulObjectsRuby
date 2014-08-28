@@ -7,16 +7,21 @@ describe RestfulObjects::ObjectProperties do
     class PropertiesTest
       include RestfulObjects::Object
 
-      property :id, :int, read_only: true
-      property :name, :string, max_length: 10
-      property :string_prop, :string
-      property :int_prop, :int
+      property :id,           :int,    read_only: true
+      property :name,         :string, max_length: 10
+      property :string_prop,  :string
+      property :int_prop,     :int
+      property :bool_prop,    :bool
       property :decimal_prop, :decimal
-      property :date_prop, :date
-      property :blob_prop, :blob
+      property :date_prop,    :date
+      property :blob_prop,    :blob
 
-      property :prop_full_metadata, :string, friendly_name: 'Meta Prop', description: 'To Test Metadata', max_length: 30,
-                                             pattern: '.*abc.*', optional: false
+      property :prop_full_metadata, :string,
+                                    friendly_name: 'Meta Prop',
+                                    description: 'To Test Metadata',
+                                    max_length: 30,
+                                    pattern: '.*abc.*',
+                                    optional: false
 
       def initialize
         super
@@ -100,15 +105,17 @@ describe RestfulObjects::ObjectProperties do
   end
 
   it 'should process different property types get' do
-    @object.string_prop = 'A string'
-    @object.int_prop = 1234
+    @object.string_prop  = 'A string'
+    @object.int_prop     = 1234
+    @object.bool_prop    = true
     @object.decimal_prop = 333.33
-    @object.date_prop = Date.new(2012, 2, 29)
-    @object.blob_prop = "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9"
+    @object.date_prop    = Date.new(2012, 2, 29)
+    @object.blob_prop    = "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9"
 
     expected = {
       'string_prop' => 'A string',
       'int_prop' => 1234,
+      'bool_prop' => 'true',
       'decimal_prop' => 333.33,
       'date_prop' => '2012-02-29',
       'blob_prop' => '5aW0MPKMcdk=' }
@@ -123,6 +130,7 @@ describe RestfulObjects::ObjectProperties do
     values = {
       'string_prop' => 'A string',
       'int_prop' => 1234,
+      'bool_prop' => 'true',
       'decimal_prop' => 333.33,
       'date_prop' => '2012-02-29',
       'blob_prop' => '5aW0MPKMcdk=' }
@@ -131,11 +139,12 @@ describe RestfulObjects::ObjectProperties do
       put "/objects/PropertiesTest/#{@object.object_id}/properties/#{name}", { 'value' => value }.to_json
     end
 
-    @object.string_prop.should eq 'A string'
-    @object.int_prop.should eq 1234
+    @object.string_prop.should  eq 'A string'
+    @object.int_prop.should     eq 1234
+    @object.bool_prop.should    eq true
     @object.decimal_prop.should eq 333.33
-    @object.date_prop.should eq Date.new(2012, 2, 29)
-    @object.blob_prop.should eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9"
+    @object.date_prop.should    eq Date.new(2012, 2, 29)
+    @object.blob_prop.should    eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9"
   end
 
   it 'should process a property put with json' do

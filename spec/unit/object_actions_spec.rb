@@ -18,11 +18,11 @@ describe RestfulObjects::ObjectActions do
       property :date_prop, :date
       property :blob_prop, :blob
 
-      action :string_action, :string
-      action :int_action, :int
-      action :decimal_action, :decimal
-      action :date_action, :date
-      action :blob_action, :blob
+      action :string_action,  return_type: :string
+      action :int_action,     return_type: :int
+      action :decimal_action, return_type: :decimal
+      action :date_action,    return_type: :date
+      action :blob_action,    return_type: :blob
 
       def string_action
         string_prop
@@ -44,12 +44,12 @@ describe RestfulObjects::ObjectActions do
         blob_prop
       end
 
-      action :multiply, :int, { 'arg1' => :int, 'arg2' => :int }
-      action :get_nil_scalar, :int
-      action :get_object, [:object, ActionResult]
-      action :get_nil_object, [:object, ActionResult]
-      action :get_list, [:list, ActionResult]
-      action :get_nil_list, [:list, ActionResult]
+      action :multiply,       return_type: :int, parameters: { 'arg1' => :int, 'arg2' => :int }
+      action :get_nil_scalar, return_type: :int
+      action :get_object,     return_type: { object: ActionResult }
+      action :get_nil_object, return_type: { object: ActionResult }
+      action :get_list,       return_type: { list:   ActionResult }
+      action :get_nil_list,   return_type: { list:   ActionResult }
 
       def multiply(arg1, arg2)
         arg1 * arg2
@@ -316,7 +316,7 @@ describe RestfulObjects::ObjectActions do
 
   it 'should generate metadata in extensions' do
     class ActionsTest
-      action :action_full_metadata, :string, {}, friendly_name: 'Meta Action', description: 'To Test Metadata'
+      action :action_full_metadata, return_type: :string, friendly_name: 'Meta Action', description: 'To Test Metadata'
     end
 
     expected = {
@@ -337,9 +337,9 @@ describe RestfulObjects::ObjectActions do
 
   it 'should generate metadata for parameters in extensions' do
     class ActionsTest
-      action :metadata_test, :void, { param1: :string,
-                                      param2: [:int, { optional: false, friendly_name: 'friendly', description: 'description' }],
-                                      param3: ActionResult }
+      action :metadata_test, parameters: { param1: :string,
+                                           param2: [:int, { optional: false, friendly_name: 'friendly', description: 'description' }],
+                                           param3: ActionResult }
     end
 
     expected = {

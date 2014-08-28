@@ -28,8 +28,8 @@ module RestfulObjects
       self.class_eval { attr_reader name }
     end
 
-    def action(name, result_type = :void, parameters = {}, options = {})
-      RestfulObjects::DomainModel.current.types[self.name].actions.add(name.to_s, result_type, parameters, options)
+    def action(name, options = {})
+      RestfulObjects::DomainModel.current.types[self.name].actions.add(name.to_s, options)
     end
   end
 end

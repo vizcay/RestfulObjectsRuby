@@ -67,7 +67,7 @@ describe RestfulObjects::Service do
   it 'should generate action representation to links to services invokation' do
     class ServiceTest
       include RestfulObjects::Service
-      action :do_something, :void
+      action :do_something
     end
 
     get '/services/ServiceTest/actions/do_something'
@@ -96,7 +96,7 @@ describe RestfulObjects::Service do
   it 'should process action from service route' do
     class ServiceTest
       include RestfulObjects::Service
-      action :do_something, :int
+      action :do_something, return_type: :int
       def do_something
         @something_done = true
         10

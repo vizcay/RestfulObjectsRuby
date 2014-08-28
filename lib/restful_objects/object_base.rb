@@ -79,6 +79,8 @@ module RestfulObjects
           value.to_s
         when :int
           value.to_i
+        when :bool
+          value.to_s
         when :decimal
           value.to_f
         when :date
@@ -97,6 +99,14 @@ module RestfulObjects
           value.to_s
         when :int
           value.to_i
+        when :bool
+          if value == 'true'
+            true
+          elsif value == 'false'
+            false
+          else
+            raise ArgumentError.new "invalid boolean value: #{value}"
+          end
         when :decimal
           Float(value)
         when :date
