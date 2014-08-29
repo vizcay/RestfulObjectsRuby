@@ -44,9 +44,9 @@ module RestfulObjects
       action_description.parameters.each do |name, parameter|
         case parameter.type
           when :int
-            parameters << arguments[name]['value'].to_i
+            parameters << arguments[name.to_s]['value'].to_i
           else
-            parameters << arguments[name]['value']
+            parameters << arguments[name.to_s]['value']
         end
       end
 

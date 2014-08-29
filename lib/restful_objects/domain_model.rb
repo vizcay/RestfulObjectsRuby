@@ -74,6 +74,10 @@ module RestfulObjects
       @services.clear
       @objects.clear
     end
+
+    def reset_objects
+      @objects.clear
+    end
   end
 end
 
