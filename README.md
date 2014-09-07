@@ -46,7 +46,7 @@ end
 ```
 
 ### Examples
-- [https://github.com/vizcay/ro_topological_sort](https://github.com/vizcay/ro_topological_sort).
+- [https://github.com/vizcay/ro_topological_sort](https://github.com/vizcay/ro_topological_sort)
 
 ### How to install it?
 Run
