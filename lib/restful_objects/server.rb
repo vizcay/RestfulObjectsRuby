@@ -1,5 +1,7 @@
 module RestfulObjects
   class Server < Sinatra::Base
+    set :bind, '0.0.0.0' # listen at all networks (needed for using with vagrant port forwarding)
+
     after do
       headers['Access-Control-Allow-Origin'] = '*'
     end
