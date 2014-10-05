@@ -49,19 +49,23 @@ end
 - [Topological Sort Restful Objects server](https://github.com/vizcay/ro_topological_sort)
 
 ### How to install it?
-Run
+If you have a Ruby environment (> 1.9.3) with RubyGems installed, simply run:
 
 ```shell
 gem install restful_objects
 ```
 
-or add 
+or add,
 
 ```ruby
 gem 'restful_objects'
 ```
 
 to your's project Gemfile and 'bundle install' it.
+
+If not, consider using Vagrant to setup a VM with all the dependencies and the latest version of the framework following the instructions here:
+
+[https://github.com/vizcay/restful_objects_vagrant](https://github.com/vizcay/restful_objects_vagrant)
 
 ### Project Status
 The source quality is at alpha state, and it was created mostly as a proof of concept. Still is has plenty of specs and a big percentage of the specification implemented, the grey areas are mostly related to errors and validations. It has been developed with MRI and hasn't been tested on other Ruby implementations.
