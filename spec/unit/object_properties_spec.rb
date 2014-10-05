@@ -144,7 +144,7 @@ describe RestfulObjects::ObjectProperties do
     @object.bool_prop.should    eq true
     @object.decimal_prop.should eq 333.33
     @object.date_prop.should    eq Date.new(2012, 2, 29)
-    @object.blob_prop.should    eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9"
+    @object.blob_prop.should    eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9".force_encoding('ASCII-8BIT')
   end
 
   it 'should process a property put with json' do
