@@ -1,6 +1,6 @@
-require_relative 'property_list'
-require_relative 'collection_list'
-require_relative 'action_list'
+require_relative 'property_description'
+require_relative 'collection_description'
+require_relative 'action_description'
 
 module RestfulObjects
   class Type
@@ -10,14 +10,29 @@ module RestfulObjects
     attr_accessor :friendly_name, :plural_name, :description
 
     def initialize(id)
-      @id = id
-      @properties = PropertyList.new(id)
-      @collections = CollectionList.new(id)
-      @actions = ActionList.new(id)
-      @is_service = false
+      @id            = id
+      @properties    = {}
+      @collections   = {}
+      @actions       = {}
+      @is_service    = false
       @friendly_name = ''
-      @plural_name = ''
-      @description = ''
+      @plural_name   = ''
+      @description   = ''
+    end
+
+    def register_property(name, return_type, options = {})
+      options[:member_order] ||= @properties.count + 1
+      @properties[name]        = PropertyDescription.new(name, @id, return_type, options)
+    end
+
+    def register_collection(name, type, options = {})
+      options[:member_order] ||= @collections.count + 1
+      @collections[name]       = CollectionDescription.new(name, type, @id, options)
+    end
+
+    def register_action(name, options = {})
+      options[:member_order] ||= @actions.count + 1
+      @actions[name]           = ActionDescription.new(name, @id, options)
     end
 
     def get_representation

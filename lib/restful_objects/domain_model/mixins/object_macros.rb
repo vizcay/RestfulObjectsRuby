@@ -1,7 +1,7 @@
 module RestfulObjects
   module ObjectMacros
     def property(name, type, options = {})
-      RestfulObjects::DomainModel.current.types[self.name].properties.add(name.to_s, type, options)
+      RestfulObjects::DomainModel.current.types[self.name].register_property(name.to_s, type, options)
       if options[:read_only]
         self.class_eval { attr_reader name }
       else
@@ -23,13 +23,13 @@ module RestfulObjects
     def collection(name, type, options = {})
       type = type.name if type.is_a? Class
 
-      RestfulObjects::DomainModel.current.types[self.name].collections.add(name.to_s, type, options)
+      RestfulObjects::DomainModel.current.types[self.name].register_collection(name.to_s, type, options)
 
       self.class_eval { attr_reader name }
     end
 
     def action(name, options = {})
-      RestfulObjects::DomainModel.current.types[self.name].actions.add(name.to_s, options)
+      RestfulObjects::DomainModel.current.types[self.name].register_action(name.to_s, options)
     end
   end
 end
