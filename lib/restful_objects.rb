@@ -7,7 +7,12 @@ require 'forwardable'
 require 'sinatra/base'
 
 require_relative "restful_objects/version"
-require_relative 'restful_objects/server'
+
+require_relative 'restful_objects/router/supporting_resources'
+require_relative 'restful_objects/router/domain_object_resources'
+require_relative 'restful_objects/router/domain_type_resources'
+require_relative 'restful_objects/router/router'
+
 require_relative 'restful_objects/link_generator'
 require_relative 'restful_objects/http_response'
 require_relative 'restful_objects/user'

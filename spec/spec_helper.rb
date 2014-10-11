@@ -6,7 +6,7 @@ require_relative '../lib/restful_objects.rb'
 
 module Helpers
   def app
-    RestfulObjects::Server
+    RestfulObjects::Router::Base
   end
 
   def model
@@ -48,5 +48,6 @@ end
 JsonExpressions::Matcher.assume_strict_arrays = false
 JsonExpressions::Matcher.assume_strict_hashes = false
 
-RestfulObjects::Server.set :show_exceptions, false
-RestfulObjects::Server.set :raise_errors, true
+RestfulObjects::Router::Base.set :show_exceptions, false
+RestfulObjects::Router::Base.set :raise_errors,    true
+

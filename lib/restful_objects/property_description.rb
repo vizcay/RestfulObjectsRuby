@@ -8,17 +8,17 @@ module RestfulObjects
     def initialize(id, domain_type, return_type, options)
       raise "property type #{return_type} usupported" if not [:string, :int, :bool, :decimal, :date, :blob].include?(return_type)
 
-      @id = id
-      @domain_type = domain_type
-      @return_type = return_type
-      @friendly_name = options[:friendly_name] || id
-      @description = options[:description] || id
-      @optional = options[:optional].nil? ? true : options[:optional]
-      @read_only = options[:read_only].nil? ? false : options[:read_only]
-      @member_order = options[:member_order] || 1
-      @max_length = options[:max_length]
+      @id              = id
+      @domain_type     = domain_type
+      @return_type     = return_type
+      @friendly_name   = options[:friendly_name] || id
+      @description     = options[:description] || id
+      @optional        = options[:optional].nil? ? true : options[:optional]
+      @read_only       = options[:read_only].nil? ? false : options[:read_only]
+      @member_order    = options[:member_order] || 1
+      @max_length      = options[:max_length]
       @disabled_reason = options[:disabled_reason] || 'read-only property' if read_only
-      @pattern = options[:pattern]
+      @pattern         = options[:pattern]
     end
 
     def get_representation

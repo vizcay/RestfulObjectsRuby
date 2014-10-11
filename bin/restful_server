@@ -10,5 +10,5 @@ end
 load ARGV[0]
 
 RestfulObjects::DomainModel.current.base_url = ARGV[1] || 'http://localhost:4567'
-RestfulObjects::Server.run!
+RestfulObjects::Router::Base.run!
 
