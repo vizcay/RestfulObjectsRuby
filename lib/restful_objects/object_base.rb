@@ -27,8 +27,10 @@ module RestfulObjects
     end
 
     def get_representation
-      HttpResponse.new(representation.to_json,
-                       'application/json;profile="urn:org.restfulobjects:repr-types/object";x-ro-domain-type="' + rs_type.id + '"')
+      [200,
+       { 'Content-Type' =>
+           "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{rs_type.id}\"" },
+       representation.to_json]
     end
 
     def rs_instance_id

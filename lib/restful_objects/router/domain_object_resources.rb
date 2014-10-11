@@ -4,7 +4,7 @@ module RestfulObjects
       def self.registered(router)
         # C.14 Domain Object
         router.get "/objects/:domain_type/:instance_id" do
-          populate_response model.objects[params[:instance_id].to_i].get_representation
+          model.objects[params[:instance_id].to_i].get_representation
         end
 
         router.delete "/objects/:domain_type/:instance_id" do
@@ -13,7 +13,7 @@ module RestfulObjects
 
         # C.15 Domain Services
         router.get "/services/:service_id" do
-          populate_response model.services[params[:service_id]].get_representation
+          model.services[params[:service_id]].get_representation
         end
 
         # C.16 Property

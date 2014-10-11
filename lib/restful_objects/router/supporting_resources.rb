@@ -8,12 +8,12 @@ module RestfulObjects
         end
 
         # B.6 User
-        router.get "/user" do
+        router.get '/user' do
           model.get_user_as_json
         end
 
         # B.7 Services
-        router.get "/services" do
+        router.get '/services' do
           model.get_services
         end
 
@@ -24,7 +24,7 @@ module RestfulObjects
 
         # B.9 Objects of Type Resource
         router.post '/objects/:domain_type' do
-          populate_response model.types[params[:domain_type]].post_prototype_object(request.body.read)
+          model.types[params[:domain_type]].post_prototype_object(request.body.read)
         end
       end
     end

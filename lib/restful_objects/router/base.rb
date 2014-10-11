@@ -16,12 +16,6 @@ module RestfulObjects
           RestfulObjects::DomainModel.current
         end
 
-        def populate_response(http_response)
-          content_type http_response.content_type
-          status http_response.status
-          body http_response.body
-        end
-
         def process_params
           if request.query_string != ''
             query_params = CGI.parse(request.query_string)

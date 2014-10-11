@@ -14,7 +14,6 @@ require_relative 'restful_objects/router/domain_type_resources'
 require_relative 'restful_objects/router/base'
 
 require_relative 'restful_objects/link_generator'
-require_relative 'restful_objects/http_response'
 require_relative 'restful_objects/user'
 require_relative 'restful_objects/property_list'
 require_relative 'restful_objects/property_description'
