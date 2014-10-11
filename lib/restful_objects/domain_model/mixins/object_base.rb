@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module RestfulObjects
   module ObjectBase
     attr_accessor :is_service, :title

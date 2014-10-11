@@ -1,6 +1,6 @@
 module RestfulObjects
   class User
-    include LinkGenerator
+    include RestfulObjects::LinkGenerator
 
     attr_reader :base_url, :user_name
     attr_accessor :friendly_name, :email

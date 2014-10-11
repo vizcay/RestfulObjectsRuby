@@ -1,3 +1,5 @@
+require_relative 'parameter_description'
+
 module RestfulObjects
   class ParameterDescriptionList
     extend Forwardable
@@ -13,3 +15,4 @@ module RestfulObjects
     def_delegators :@parameters, :[], :each, :include?, :count, :empty?
   end
 end
+

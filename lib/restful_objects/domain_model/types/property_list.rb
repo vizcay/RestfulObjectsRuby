@@ -1,3 +1,5 @@
+require_relative 'property_description'
+
 module RestfulObjects
   class PropertyList
     extend Forwardable
@@ -15,3 +17,4 @@ module RestfulObjects
     def_delegators :@properties, :[], :each, :include?, :count, :empty?
   end
 end
+

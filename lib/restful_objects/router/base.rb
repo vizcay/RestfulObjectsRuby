@@ -1,3 +1,7 @@
+require_relative 'supporting_resources'
+require_relative 'domain_object_resources'
+require_relative 'domain_type_resources'
+
 module RestfulObjects
   module Router
     class Base < Sinatra::Base

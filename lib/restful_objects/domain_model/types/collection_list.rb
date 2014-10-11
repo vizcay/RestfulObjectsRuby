@@ -1,3 +1,5 @@
+require_relative 'collection_description'
+
 module RestfulObjects
   class CollectionList
     extend Forwardable
@@ -15,3 +17,4 @@ module RestfulObjects
     def_delegators :@collections, :[], :each, :each_key, :each_value, :include?, :count, :empty?, :clear
   end
 end
+

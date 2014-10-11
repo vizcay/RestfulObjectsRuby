@@ -1,4 +1,8 @@
-# encoding: utf-8
+require_relative 'object_macros'
+require_relative 'object_base'
+require_relative 'object_properties'
+require_relative 'object_collections'
+require_relative 'object_actions'
 
 module RestfulObjects
   module Object

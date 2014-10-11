@@ -1,3 +1,5 @@
+require_relative 'parameter_description_list'
+
 module RestfulObjects
   class ActionDescription
     include LinkGenerator

@@ -1,3 +1,11 @@
+require_relative 'helpers/link_generator'
+require_relative 'user'
+require_relative 'mixins/object'
+require_relative 'mixins/service'
+require_relative 'object_list'
+require_relative 'service_list'
+require_relative 'types/type_list'
+
 module RestfulObjects
   class DomainModel
     include LinkGenerator

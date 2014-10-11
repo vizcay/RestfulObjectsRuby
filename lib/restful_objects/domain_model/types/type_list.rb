@@ -1,3 +1,5 @@
+require_relative 'type'
+
 module RestfulObjects
   class TypeList
     extend Forwardable
@@ -28,3 +30,4 @@ module RestfulObjects
     def_delegators :@types, :[], :each, :include?, :size?, :clear, :empty?
   end
 end
+

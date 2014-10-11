@@ -1,3 +1,5 @@
+require_relative 'action_description'
+
 module RestfulObjects
   class ActionList
     extend Forwardable
@@ -15,3 +17,4 @@ module RestfulObjects
     def_delegators :@actions, :[], :each, :include?, :count, :empty?
   end
 end
+

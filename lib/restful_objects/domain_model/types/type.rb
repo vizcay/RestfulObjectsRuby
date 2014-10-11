@@ -1,3 +1,7 @@
+require_relative 'property_list'
+require_relative 'collection_list'
+require_relative 'action_list'
+
 module RestfulObjects
   class Type
     include LinkGenerator
@@ -108,3 +112,4 @@ module RestfulObjects
       end
   end
 end
+
