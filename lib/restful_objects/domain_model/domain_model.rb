@@ -2,8 +2,6 @@ require_relative 'helpers/link_generator'
 require_relative 'user'
 require_relative 'mixins/object'
 require_relative 'mixins/service'
-require_relative 'object_list'
-require_relative 'service_list'
 require_relative 'types/domain_type'
 
 module RestfulObjects
@@ -27,11 +25,32 @@ module RestfulObjects
       @compatible_mode = false
       @user            = User.new(@base_url, 'anonymous')
       @types           = {}
-      @services        = ServiceList.new(@base_url)
-      @objects         = ObjectList.new(@base_url)
+      @services        = {}
+      @objects         = {}
+      @services.instance_eval do
+        alias :base_accesor :[]
+
+        def [](key)
+          value = base_accesor(key)
+          if value.is_a?(Class)
+            value = value.new
+            self[key] = value
+          end
+          value
+        end
+      end
     end
 
-    def add_type(name)
+    def register_object(instance)
+      @objects[instance.object_id] = instance
+    end
+
+    def register_service(service)
+      raise 'service registration should be done with a class' unless service.is_a?(Class)
+      @services[service.name] = service
+    end
+
+    def register_type(name)
       @types[name] = DomainType.new(name)
     end
 
@@ -69,7 +88,13 @@ module RestfulObjects
     end
 
     def get_services
-      services.get_list
+      { 'links' => [
+           link_to(:self, '/services', :services),
+           link_to(:up, '/', :homepage),
+         ],
+         'value' => services_generate_values,
+         'extensions' => { }
+      }.to_json
     end
 
     def get_type_list_representation
@@ -87,7 +112,7 @@ module RestfulObjects
 
     def reset
       @base_url = 'http://localhost'
-      @user = nil
+      @user     = nil
       @types.clear
       @services.clear
       @objects.clear
@@ -95,6 +120,23 @@ module RestfulObjects
 
     def reset_objects
       @objects.clear
+    end
+
+    private
+
+    def services_generate_values
+      services_ensure_all_created
+      values = []
+      @services.each do |name, service|
+        element = link_to(:service, "/services/#{name}", :object, service_id: name)
+        element['title'] = service.title
+        values << element
+      end
+      values
+    end
+
+    def services_ensure_all_created
+      @services.each { |name, value| @services[name] = value.new if value.is_a? Class }
     end
   end
 end

@@ -13,7 +13,7 @@ module RestfulObjects
     end
 
     def rs_register_in_model
-      rs_model.objects.register(self) unless @is_service
+      rs_model.register_object(self) unless @is_service
     end
 
     def rs_model
