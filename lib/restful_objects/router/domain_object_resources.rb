@@ -18,6 +18,12 @@ module RestfulObjects
           objects[params[:instance_id].to_i].rs_delete
         end
 
+        # patch to allow cross-origin put & delete requests #
+        router.options "/objects/:domain_type/:instance_id" do
+          headers['Access-Control-Allow-Methods'] = 'GET, DELETE, PUT, OPTIONS'
+          headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Methods'
+        end
+
         # C.15 Domain Services
         router.get "/services/:service_id" do
           model.services[params[:service_id]].get_representation
