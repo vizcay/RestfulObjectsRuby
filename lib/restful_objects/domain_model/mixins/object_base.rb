@@ -31,11 +31,25 @@ module RestfulObjects
        representation.to_json]
     end
 
+    def put_properties_and_get_representation(json)
+      properties = JSON.parse(json)
+      properties.each do |property, container|
+        raise 'property not exists' unless rs_model.types[self.class.name].properties.include?(property)
+        raise 'read-only property' if rs_model.types[self.class.name].properties[property].read_only
+        set_property_value(property, container['value'])
+        on_after_update if respond_to?(:on_after_update)
+      end
+      [200,
+       { 'Content-Type' =>
+           "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{rs_type.id}\"" },
+       representation(false).to_json]
+    end
+
     def rs_instance_id
       object_id
     end
 
-    def representation
+    def representation(include_self_link = true)
       representation = {
         'title' => title,
         'members' => generate_members,
@@ -45,10 +59,10 @@ module RestfulObjects
 
       if not is_service
         representation['instanceId'] = object_id.to_s
-        representation['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object)
+        representation['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
       else
         representation['serviceId'] = self.class.name
-        representation['links'] << link_to(:self, "/services/#{self.class.name}", :object)
+        representation['links'] << link_to(:self, "/services/#{self.class.name}", :object) if include_self_link
       end
 
       representation

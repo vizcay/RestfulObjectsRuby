@@ -45,8 +45,8 @@ module RestfulObjects
     end
 
     def put_property_as_json(property, json)
-      raise "property not exists" if not rs_model.types[self.class.name].properties.include?(property)
-      raise "read-only property" if rs_model.types[self.class.name].properties[property].read_only
+      raise 'property not exists' unless rs_model.types[self.class.name].properties.include?(property)
+      raise 'read-only property' if rs_model.types[self.class.name].properties[property].read_only
 
       value = JSON.parse(json)['value']
       set_property_value(property, value)

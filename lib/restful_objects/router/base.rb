@@ -20,6 +20,10 @@ module RestfulObjects
           RestfulObjects::DomainModel.current
         end
 
+        def objects
+          RestfulObjects::DomainModel.current.objects
+        end
+
         def process_params
           if request.query_string != ''
             query_params = CGI.parse(request.query_string)

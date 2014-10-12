@@ -4,6 +4,20 @@ require 'pp'
 
 require_relative '../lib/restful_objects.rb'
 
+class Array
+  def status
+    self[0]
+  end
+
+  def headers
+    self[1]
+  end
+
+  def body
+    self[2]
+  end
+end
+
 module Helpers
   def app
     RestfulObjects::Router::Base
