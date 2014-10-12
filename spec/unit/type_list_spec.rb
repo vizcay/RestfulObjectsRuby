@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../spec_helper'
 
-describe RestfulObjects::TypeList do
+describe RestfulObjects::DomainModel do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
 
@@ -31,7 +31,7 @@ describe RestfulObjects::TypeList do
       'extensions' => {}
     }.to_json
 
-    RestfulObjects::DomainModel.current.types.get_representation
+    RestfulObjects::DomainModel.current.get_type_list_representation
   end
 end
 

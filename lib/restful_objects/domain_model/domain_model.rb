@@ -4,7 +4,7 @@ require_relative 'mixins/object'
 require_relative 'mixins/service'
 require_relative 'object_list'
 require_relative 'service_list'
-require_relative 'types/type_list'
+require_relative 'types/type'
 
 module RestfulObjects
   class DomainModel
@@ -22,13 +22,17 @@ module RestfulObjects
     end
 
     def initialize
-      @base_url = 'http://localhost'
+      @base_url        = 'http://localhost'
       @metadata_schema = :selectable
       @compatible_mode = false
-      @user = User.new(@base_url, 'anonymous')
-      @types = TypeList.new
-      @services = ServiceList.new(@base_url)
-      @objects = ObjectList.new(@base_url)
+      @user            = User.new(@base_url, 'anonymous')
+      @types           = {}
+      @services        = ServiceList.new(@base_url)
+      @objects         = ObjectList.new(@base_url)
+    end
+
+    def add_type(name)
+      @types[name] = Type.new(name)
     end
 
     def get_homepage
@@ -66,6 +70,12 @@ module RestfulObjects
 
     def get_services
       services.get_list
+    end
+
+    def get_type_list_representation
+      { 'links'  => [link_to(:self, '/domain-types', :type_list), link_to(:up, '/', :homepage)],
+         'value' => @types.map { |name| link_to(:domain_type, "/domain-types/#{name}", :domain_type) }
+      }.to_json
     end
 
     def metadata_schema=(value)

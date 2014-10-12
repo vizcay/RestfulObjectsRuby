@@ -3,7 +3,7 @@ module RestfulObjects
     include LinkGenerator
 
     def self.included(base)
-      RestfulObjects::DomainModel.current.types.add(base.name)
+      RestfulObjects::DomainModel.current.add_type(base.name)
 
       base.class_eval do
         extend ObjectMacros
