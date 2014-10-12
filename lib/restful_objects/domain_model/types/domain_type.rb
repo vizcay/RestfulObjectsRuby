@@ -3,7 +3,7 @@ require_relative 'collection_description'
 require_relative 'action_description'
 
 module RestfulObjects
-  class Type
+  class DomainType
     include LinkGenerator
 
     attr_reader :id, :is_service, :properties, :collections, :actions

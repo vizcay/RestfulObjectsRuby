@@ -4,7 +4,7 @@ require_relative 'mixins/object'
 require_relative 'mixins/service'
 require_relative 'object_list'
 require_relative 'service_list'
-require_relative 'types/type'
+require_relative 'types/domain_type'
 
 module RestfulObjects
   class DomainModel
@@ -32,7 +32,7 @@ module RestfulObjects
     end
 
     def add_type(name)
-      @types[name] = Type.new(name)
+      @types[name] = DomainType.new(name)
     end
 
     def get_homepage
