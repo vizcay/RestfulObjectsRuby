@@ -26,6 +26,12 @@ module RestfulObjects
         router.post '/objects/:domain_type' do
           model.types[params[:domain_type]].post_prototype_object(request.body.read)
         end
+
+        # patch to allow cross-origin put & delete requests #
+        router.options '/objects/:domain_type' do
+          headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+          headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Methods'
+        end
       end
     end
   end

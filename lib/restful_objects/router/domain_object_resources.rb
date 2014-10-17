@@ -47,12 +47,22 @@ module RestfulObjects
           objects[params[:instance_id].to_i].get_collection_as_json(params[:collection_id])
         end
 
+        router.post "/objects/:domain_type/:instance_id/collections/:collection_id" do
+          objects[params[:instance_id].to_i].add_to_collection(params[:collection_id], request.body.read)
+        end
+
         router.put "/objects/:domain_type/:instance_id/collections/:collection_id" do
           objects[params[:instance_id].to_i].add_to_collection(params[:collection_id], request.body.read)
         end
 
         router.delete "/objects/:domain_type/:instance_id/collections/:collection_id" do
           objects[params[:instance_id].to_i].delete_from_collection(params[:collection_id], request.body.read)
+        end
+
+        # patch to allow cross-origin put & delete requests #
+        router.options "/objects/:domain_type/:instance_id/collections/:collection_id" do
+          headers['Access-Control-Allow-Methods'] = 'GET, DELETE, PUT, OPTIONS'
+          headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Methods'
         end
 
         # C.18 Action

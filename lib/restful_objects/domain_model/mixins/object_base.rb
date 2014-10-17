@@ -80,6 +80,7 @@ module RestfulObjects
       on_before_delete if respond_to?(:on_before_delete)
       @deleted = true
       on_after_delete if respond_to?(:on_after_delete)
+      {}.to_json
     end
 
     def deleted?
