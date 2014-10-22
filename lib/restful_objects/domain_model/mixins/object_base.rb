@@ -115,9 +115,9 @@ module RestfulObjects
         when :int
           value.to_i
         when :bool
-          if value == 'true'
+          if [true, 'true'].include?(value)
             true
-          elsif value == 'false'
+          elsif [false, 'false'].include?(value)
             false
           else
             raise ArgumentError.new "invalid boolean value: #{value}"
