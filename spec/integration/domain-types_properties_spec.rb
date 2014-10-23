@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../spec_helper'
 
-describe '/domain-types/:type/properties/:property' do
+describe 'DomainObject properties' do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
   end
@@ -36,6 +36,38 @@ describe '/domain-types/:type/properties/:property' do
 
     get '/domain-types/PropertyTest/properties/name'
     last_response.body.should match_json_expression expected
+  end
+
+  describe 'json representation of property reference' do
+    before :all do
+      class ReferenceType
+        include RestfulObjects::Object
+      end
+      class PropertyRefTest
+        include RestfulObjects::Object
+        property :reference, { object: ReferenceType }
+      end
+      @referenced       = ReferenceType.new
+      @object           = PropertyRefTest.new
+      @object.reference = @referenced
+    end
+
+    it 'gets representation' do
+      expect(@object.get_property_as_json(:reference)).to match_json_expression(
+        { 'reference' =>
+          { 'value' =>
+            { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
+              'href'   => "http://localhost/objects/ReferenceType/#{@referenced.object_id}",
+              'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
+              'method' => 'GET',
+              'title'  => @referenced.title
+            }
+          }
+        }
+      )
+    end
+
+    pending 'puts representation'
   end
 end
 

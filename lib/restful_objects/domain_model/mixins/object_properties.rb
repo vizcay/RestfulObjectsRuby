@@ -18,6 +18,7 @@ module RestfulObjects
     end
 
     def get_property_as_json(property)
+      property = property.to_s if property.is_a?(Symbol)
       raise "Property not exists" if not rs_model.types[self.class.name].properties.include?(property)
 
       representation = {
@@ -68,7 +69,7 @@ module RestfulObjects
     end
 
     def get_property_value(property)
-      encode_value(send(property.to_sym), property_type(property))
+      encode_value(send(property.to_sym), property_type(property), property)
     end
 
     def set_property_value(property, value)

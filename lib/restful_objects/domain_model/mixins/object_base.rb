@@ -76,6 +76,12 @@ module RestfulObjects
       end
     end
 
+    def get_property_rel_representation(property_name)
+      representation = link_to(:value, "/objects/#{self.class.name}/#{object_id}", :object, property: property_name)
+      representation['title'] = @title
+      representation
+    end
+
     def rs_delete
       on_before_delete if respond_to?(:on_before_delete)
       @deleted = true
@@ -87,7 +93,7 @@ module RestfulObjects
       @deleted
     end
 
-    def encode_value(value, type)
+    def encode_value(value, type, property_name = '')
       return nil if value.nil?
       case type
         when :string
@@ -103,7 +109,11 @@ module RestfulObjects
         when :blob
           Base64.encode64(value).strip
         else
-          raise "encode_value unsupported property type: #{type}"
+          if value.respond_to?(:get_property_rel_representation)
+            value.get_property_rel_representation(property_name)
+          else
+            raise "encode_value unsupported property type: #{type}"
+          end
       end
     end
 

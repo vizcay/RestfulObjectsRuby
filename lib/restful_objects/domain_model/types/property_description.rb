@@ -6,11 +6,15 @@ module RestfulObjects
                   :max_length, :disabled_reason, :pattern
 
     def initialize(id, domain_type, return_type, options)
-      raise "property type #{return_type} usupported" if not [:string, :int, :bool, :decimal, :date, :blob].include?(return_type)
+      if return_type.is_a?(Hash)
+        raise "hash with :object key expected for property reference" unless return_type.has_key?(:object)
+      else
+        raise "property type #{return_type} usupported" if not [:string, :int, :bool, :decimal, :date, :blob].include?(return_type)
+      end
 
       @id              = id
       @domain_type     = domain_type
-      @return_type     = return_type
+      @return_type     = return_type.is_a?(Hash) ? return_type[:object] : return_type
       @friendly_name   = options[:friendly_name] || id
       @description     = options[:description] || id
       @optional        = options[:optional].nil? ? true : options[:optional]
