@@ -12,7 +12,20 @@ module RestfulObjects
           'extensions' => property.metadata
         }
 
-        members[name]['disabledReason'] = property.disabled_reason if property.read_only
+        if property.read_only
+          members[name]['disabledReason'] = property.disabled_reason
+        else
+          if self.respond_to?("#{name}_choices")
+            choices = self.send("#{name}_choices")
+            raise "value returned by #{name}_choices method should be an Array" unless choices.is_a?(Array)
+            if property_description(name).is_reference
+              choices_json = choices.map { |object| object.get_property_rel_representation(name) }
+            else
+              choices_json = choices.map { |value| decode_value(value, property_type(name)) }
+            end
+            members[name]['choices'] = choices_json
+          end
+        end
       end
       members
     end
@@ -92,7 +105,7 @@ module RestfulObjects
       if property_description(property).is_reference
         href_value = value['href']
         match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
-        raise "invalid request format" if not match
+        raise "invalid property reference format: '#{href_value}'" if not match
         domain_type = match['domain-type']
         id = match['object-id'].to_i
         raise "value does not exists" if not rs_model.objects.include?(id)
