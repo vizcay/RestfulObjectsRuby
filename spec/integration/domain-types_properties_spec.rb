@@ -39,7 +39,7 @@ describe 'DomainObject properties' do
   end
 
   describe 'json representation of property reference' do
-    before :all do
+    before :each do
       class ReferenceType
         include RestfulObjects::Object
       end
@@ -47,12 +47,12 @@ describe 'DomainObject properties' do
         include RestfulObjects::Object
         property :reference, { object: ReferenceType }
       end
-      @referenced       = ReferenceType.new
-      @object           = PropertyRefTest.new
-      @object.reference = @referenced
+      @referenced = ReferenceType.new
+      @object     = PropertyRefTest.new
     end
 
     it 'gets representation' do
+      @object.reference = @referenced
       expect(@object.get_property_as_json(:reference)).to match_json_expression(
         { 'reference' =>
           { 'value' =>
@@ -67,7 +67,50 @@ describe 'DomainObject properties' do
       )
     end
 
-    pending 'puts representation'
+    it 'lists choices' do
+      choices = [ReferenceType.new, ReferenceType.new, ReferenceType.new]
+      @object.define_singleton_method(:reference_choices) { choices }
+      expect(@object.get_property_as_json(:reference)).to match_json_expression(
+        { 'reference' =>
+          { 'value' => nil,
+            'choices' => [
+              { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
+                'href'   => "http://localhost/objects/ReferenceType/#{choices[0].object_id}",
+                'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
+                'method' => 'GET',
+                'title'  => choices[0].title },
+              { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
+                'href'   => "http://localhost/objects/ReferenceType/#{choices[1].object_id}",
+                'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
+                'method' => 'GET',
+                'title'  => choices[1].title },
+              { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
+                'href'   => "http://localhost/objects/ReferenceType/#{choices[2].object_id}",
+                'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
+                'method' => 'GET',
+                'title'  => choices[2].title }
+            ]
+          }
+        }
+      )
+    end
+
+    it 'puts representation' do
+      json = { 'value' => { 'href' => @referenced.ro_absolute_url } }.to_json
+      expect(@object.put_property_as_json(:reference, json)).to match_json_expression(
+        { 'reference' =>
+          { 'value' =>
+            { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
+              'href'   => "http://localhost/objects/ReferenceType/#{@referenced.object_id}",
+              'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
+              'method' => 'GET',
+              'title'  => @referenced.title
+            }
+          }
+        }
+      )
+      expect(@object.reference).to eq @referenced
+    end
   end
 end
 

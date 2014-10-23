@@ -2,8 +2,8 @@ module RestfulObjects
   class PropertyDescription
     include LinkGenerator
 
-    attr_accessor :id, :domain_type, :return_type, :friendly_name, :description, :optional, :read_only, :member_order,
-                  :max_length, :disabled_reason, :pattern
+    attr_accessor :id, :domain_type, :return_type, :is_reference, :friendly_name, :description, :optional, :read_only,
+                  :member_order, :max_length, :disabled_reason, :pattern
 
     def initialize(id, domain_type, return_type, options)
       if return_type.is_a?(Hash)
@@ -14,7 +14,13 @@ module RestfulObjects
 
       @id              = id
       @domain_type     = domain_type
-      @return_type     = return_type.is_a?(Hash) ? return_type[:object] : return_type
+      if return_type.is_a?(Hash)
+        @return_type  = return_type[:object]
+        @is_reference = true
+      else
+        @return_type  = return_type
+        @is_reference = false
+      end
       @friendly_name   = options[:friendly_name] || id
       @description     = options[:description] || id
       @optional        = options[:optional].nil? ? true : options[:optional]

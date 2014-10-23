@@ -143,8 +143,16 @@ module RestfulObjects
       end
     end
 
+    def ro_relative_url
+      "/objects/#{self.class.name}/#{self.object_id}"
+    end
+
+    def ro_absolute_url
+      RestfulObjects::DomainModel.current.base_url + ro_relative_url
+    end
+
     def get_self_link
-      link_to(:self, "/objects/#{self.class.name}/#{self.object_id}", :object)
+      link_to(:self, ro_relative_url, :object)
     end
   end
 end

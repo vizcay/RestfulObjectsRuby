@@ -37,6 +37,17 @@ module RestfulObjects
             { property: property, method: 'PUT', arguments: { 'value' => nil } }),
           link_to(:clear, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property,
             { property: property, method: 'DELETE'} ) ]
+
+        if self.respond_to?("#{property}_choices")
+          choices = self.send("#{property}_choices")
+          raise "value returned by #{property}_choices method should be an Array" unless choices.is_a?(Array)
+          if property_description(property).is_reference
+            choices_json = choices.map { |object| object.get_property_rel_representation(property) }
+          else
+            choices_json = choices.map { |value| decode_value(value, property_type(property)) }
+          end
+          representation[property]['choices'] = choices_json
+        end
       else
         representation[property]['disabledReason'] =
           rs_model.types[self.class.name].properties[property].disabled_reason
@@ -46,12 +57,13 @@ module RestfulObjects
     end
 
     def put_property_as_json(property, json)
+      property = property.to_s if property.is_a?(Symbol)
       raise 'property not exists' unless rs_model.types[self.class.name].properties.include?(property)
       raise 'read-only property' if rs_model.types[self.class.name].properties[property].read_only
 
       value = JSON.parse(json)['value']
       set_property_value(property, value)
-      on_after_update if respond_to? :on_after_update
+      on_after_update if respond_to?(:on_after_update)
       get_property_as_json(property)
     end
 
@@ -60,8 +72,12 @@ module RestfulObjects
       raise "read-only property" if rs_model.types[self.class.name].properties[property].read_only
 
       send("#{property}=".to_sym, nil)
-      on_after_update if respond_to? :on_after_update
+      on_after_update if respond_to?(:on_after_update)
       get_property_as_json(property)
+    end
+
+    def property_description(property)
+      rs_model.types[self.class.name].properties[property]
     end
 
     def property_type(property)
@@ -73,7 +89,18 @@ module RestfulObjects
     end
 
     def set_property_value(property, value)
-      send("#{property}=".to_sym, decode_value(value, property_type(property)))
+      if property_description(property).is_reference
+        href_value = value['href']
+        match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
+        raise "invalid request format" if not match
+        domain_type = match['domain-type']
+        id = match['object-id'].to_i
+        raise "value does not exists" if not rs_model.objects.include?(id)
+        raise "domain-type does not exists" if not rs_model.types.include?(domain_type)
+        send "#{property}=".to_sym, rs_model.objects[id]
+      else
+        send "#{property}=".to_sym, decode_value(value, property_type(property))
+      end
     end
   end
 end
