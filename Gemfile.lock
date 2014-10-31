@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    restful_objects (0.0.5)
+    restful_objects (0.0.6)
       sinatra (= 1.4.4)
 
 GEM
