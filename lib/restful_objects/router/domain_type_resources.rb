@@ -4,7 +4,7 @@ module RestfulObjects
       def self.registered(router)
         # D.21 Domain Types
         router.get "/domain-types" do
-          model.types.get_representation
+          model.get_type_list_representation
         end
 
         # D.22 Domain Type
