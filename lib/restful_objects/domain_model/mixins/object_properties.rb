@@ -103,14 +103,18 @@ module RestfulObjects
 
     def set_property_value(property, value)
       if property_description(property).is_reference
-        href_value = value['href']
-        match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
-        raise "invalid property reference format: '#{href_value}'" if not match
-        domain_type = match['domain-type']
-        id = match['object-id'].to_i
-        raise "value does not exists" if not rs_model.objects.include?(id)
-        raise "domain-type does not exists" if not rs_model.types.include?(domain_type)
-        send "#{property}=".to_sym, rs_model.objects[id]
+        unless value.nil?
+          href_value = value['href']
+          match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
+          raise "invalid property reference format: '#{href_value}'" if not match
+          domain_type = match['domain-type']
+          id = match['object-id'].to_i
+          raise "value does not exists" if not rs_model.objects.include?(id)
+          raise "domain-type does not exists" if not rs_model.types.include?(domain_type)
+          send "#{property}=".to_sym, rs_model.objects[id]
+        else
+          send "#{property}=".to_sym, nil
+        end
       else
         send "#{property}=".to_sym, decode_value(value, property_type(property))
       end
