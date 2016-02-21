@@ -32,22 +32,19 @@ module RestfulObjects
     end
 
     def get_representation
-      representation = {
-        'id' => @id,
-        'optional' => optional,
-        'memberOrder' => @member_order,
-        'links' => [
+      {
+        'id'           => @id,
+        'friendlyName' => friendly_name || '',
+        'description'  => description || '',
+        'optional'     => optional,
+        'memberOrder'  => @member_order,
+        'links'        => [
           link_to(:self, "/domain-types/#{@domain_type}/properties/#{@id}", :property_description),
           link_to(:up, "/domain-types/#{@domain_type}", :domain_type),
           link_to(:return_type, "/domain-types/#{@return_type}", :domain_type)
         ],
         'extensions' => {}
-      }
-
-      representation['friendlyName'] = friendly_name if friendly_name
-      representation['description'] = description if description
-
-      representation.to_json
+      }.to_json
     end
 
     def metadata

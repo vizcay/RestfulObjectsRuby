@@ -43,7 +43,7 @@ module RestfulObjects
             raise 'invalid return_type: object, proto_object or list key expected'
           end
           unless @result_type.is_a?(Class) or @result_type.is_a?(String)
-            raise 'return_type object, proto_object or list value should be a class or a string' 
+            raise 'return_type object, proto_object or list value should be a class or a string'
           end
         else
           raise 'invalid return_type: symbol or hash expected'
@@ -74,11 +74,13 @@ module RestfulObjects
     end
 
     def metadata
-      result = { 'friendlyName' => friendly_name,
-                 'description' => description,
-                 'returnType' => result_type,
-                 'hasParams' => has_params,
-                 'memberOrder' => member_order }
+      {
+        'friendlyName' => friendly_name,
+        'description'  => description,
+        'returnType'   => result_type,
+        'hasParams'    => has_params,
+        'memberOrder'  => member_order
+      }
     end
 
     def has_params

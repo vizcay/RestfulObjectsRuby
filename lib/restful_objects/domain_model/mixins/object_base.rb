@@ -51,17 +51,19 @@ module RestfulObjects
 
     def representation(include_self_link = true)
       representation = {
+        'instanceId' => object_id.to_s,
+        'serviceId' => self.class.name,
         'title' => title,
         'members' => generate_members,
         'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
         'extensions' => rs_type.metadata
       }
 
-      if not is_service
-        representation['instanceId'] = object_id.to_s
+      unless is_service
+        representation.delete('serviceId')
         representation['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
       else
-        representation['serviceId'] = self.class.name
+        representation.delete('instanceId')
         representation['links'] << link_to(:self, "/services/#{self.class.name}", :object) if include_self_link
       end
 

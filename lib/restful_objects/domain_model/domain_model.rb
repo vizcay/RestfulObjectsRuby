@@ -98,8 +98,9 @@ module RestfulObjects
     end
 
     def get_type_list_representation
-      { 'links'  => [link_to(:self, '/domain-types', :type_list), link_to(:up, '/', :homepage)],
-         'value' => @types.each_value.map { |type| link_to(:domain_type, "/domain-types/#{type.id}", :domain_type) }
+      {
+        'value' => @types.each_value.map { |type| link_to(:domain_type, "/domain-types/#{type.id}", :domain_type) },
+        'links'  => [link_to(:self, '/domain-types', :type_list), link_to(:up, '/', :homepage)]
       }.to_json
     end
 
