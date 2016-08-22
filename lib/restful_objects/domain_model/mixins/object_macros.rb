@@ -1,36 +1,30 @@
-module RestfulObjects
-  module ObjectMacros
-    def property(name, type, options = {})
-      RestfulObjects::DomainModel.current.types[self.name].register_property(name.to_s, type, options)
-      if options[:read_only]
-        self.class_eval { attr_reader name }
-      else
-        if not options[:max_length]
-          self.class_eval { attr_accessor name }
-        else
-          self.class_eval do
-            attr_reader name
+module RestfulObjects::ObjectMacros
+  def property(name, type, options = {})
+    RestfulObjects::DomainModel.current.types[self.name].register_property(name.to_s, type, options)
 
-            define_method "#{name}=".to_sym do |value|
-              raise "string max length exceeded" if value && value.length > options[:max_length]
-              instance_variable_set("@#{name}".to_sym, value)
-            end
-          end
+    define_method(name) do
+      instance_variable_get("@#{name}")
+    end
+
+    unless options[:read_only]
+      define_method("#{name}=") do |value|
+        if options[:max_length] && value && value.length > options[:max_length]
+          raise ArgumentError.new("string max length exceeded")
         end
+        instance_variable_set("@#{name}", value)
       end
     end
+  end
 
-    def collection(name, type, options = {})
-      type = type.name if type.is_a? Class
+  def collection(name, type, options = {})
+    type = type.name if type.is_a?(Class)
 
-      RestfulObjects::DomainModel.current.types[self.name].register_collection(name.to_s, type, options)
+    RestfulObjects::DomainModel.current.types[self.name].register_collection(name.to_s, type, options)
 
-      self.class_eval { attr_reader name }
-    end
+    attr_reader(name)
+  end
 
-    def action(name, options = {})
-      RestfulObjects::DomainModel.current.types[self.name].register_action(name.to_s, options)
-    end
+  def action(name, options = {})
+    RestfulObjects::DomainModel.current.types[self.name].register_action(name.to_s, options)
   end
 end
-
