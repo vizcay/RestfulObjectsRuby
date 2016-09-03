@@ -32,7 +32,7 @@ module RestfulObjects
 
     def get_property_as_json(property)
       property = property.to_s if property.is_a?(Symbol)
-      raise "Property not exists" if not rs_model.types[self.class.name].properties.include?(property)
+      raise "Property not exists" if not ro_domain_model.types[self.class.name].properties.include?(property)
 
       representation = {
         property =>
@@ -40,11 +40,11 @@ module RestfulObjects
             'links' => [
               link_to(:self, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property),
               link_to(:up, "/objects/#{self.class.name}/#{object_id}", :object) ],
-            'extensions' => rs_model.types[self.class.name].properties[property].metadata
+            'extensions' => ro_domain_model.types[self.class.name].properties[property].metadata
           }
       }
 
-      if not rs_model.types[self.class.name].properties[property].read_only then
+      if not ro_domain_model.types[self.class.name].properties[property].read_only then
         representation[property]['links'].concat [
           link_to(:modify, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property,
             { property: property, method: 'PUT', arguments: { 'value' => nil } }),
@@ -63,7 +63,7 @@ module RestfulObjects
         end
       else
         representation[property]['disabledReason'] =
-          rs_model.types[self.class.name].properties[property].disabled_reason
+          ro_domain_model.types[self.class.name].properties[property].disabled_reason
       end
 
       representation.to_json
@@ -71,8 +71,8 @@ module RestfulObjects
 
     def put_property_as_json(property, json)
       property = property.to_s if property.is_a?(Symbol)
-      raise 'property not exists' unless rs_model.types[self.class.name].properties.include?(property)
-      raise 'read-only property' if rs_model.types[self.class.name].properties[property].read_only
+      raise 'property not exists' unless ro_domain_model.types[self.class.name].properties.include?(property)
+      raise 'read-only property' if ro_domain_model.types[self.class.name].properties[property].read_only
 
       value = JSON.parse(json)['value']
       set_property_value(property, value)
@@ -81,8 +81,8 @@ module RestfulObjects
     end
 
     def clear_property(property)
-      raise "property not exists" if not rs_model.types[self.class.name].properties.include?(property)
-      raise "read-only property" if rs_model.types[self.class.name].properties[property].read_only
+      raise "property not exists" if not ro_domain_model.types[self.class.name].properties.include?(property)
+      raise "read-only property" if ro_domain_model.types[self.class.name].properties[property].read_only
 
       send("#{property}=".to_sym, nil)
       on_after_update if respond_to?(:on_after_update)
@@ -90,11 +90,11 @@ module RestfulObjects
     end
 
     def property_description(property)
-      rs_model.types[self.class.name].properties[property]
+      ro_domain_model.types[self.class.name].properties[property]
     end
 
     def property_type(property)
-      rs_model.types[self.class.name].properties[property].return_type
+      ro_domain_model.types[self.class.name].properties[property].return_type
     end
 
     def get_property_value(property)
@@ -109,9 +109,9 @@ module RestfulObjects
           raise "invalid property reference format: '#{href_value}'" if not match
           domain_type = match['domain-type']
           id = match['object-id'].to_i
-          raise "value does not exists" if not rs_model.objects.include?(id)
-          raise "domain-type does not exists" if not rs_model.types.include?(domain_type)
-          send "#{property}=".to_sym, rs_model.objects[id]
+          raise "value does not exists" if not ro_domain_model.objects.include?(id)
+          raise "domain-type does not exists" if not ro_domain_model.types.include?(domain_type)
+          send "#{property}=".to_sym, ro_domain_model.objects[id]
         else
           send "#{property}=".to_sym, nil
         end

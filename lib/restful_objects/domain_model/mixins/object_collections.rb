@@ -16,7 +16,7 @@ module RestfulObjects
     end
 
     def get_collection_as_json(collection)
-      raise "collection not exists" if not rs_model.types[self.class.name].collections.include?(collection)
+      raise "collection not exists" if not ro_domain_model.types[self.class.name].collections.include?(collection)
 
       value = []
       send(collection.to_sym).each do |object|
@@ -35,7 +35,7 @@ module RestfulObjects
         'extensions' => rs_type.collections[collection].metadata
       }
 
-      if not rs_model.types[self.class.name].collections[collection].read_only then
+      if not ro_domain_model.types[self.class.name].collections[collection].read_only then
         add_to_link = link_to(:add_to, "/objects/#{rs_type.id}/#{rs_instance_id}/collections/#{collection}",
                               :object_collection, method: 'PUT', collection: collection)
         add_to_link['arguments'] = { 'value' => nil }
@@ -45,38 +45,38 @@ module RestfulObjects
         representation['links'].concat [ add_to_link, remove_from_link ]
       else
         representation['disabledReason'] =
-          rs_model.types[self.class.name].collections[collection].disabled_reason
+          ro_domain_model.types[self.class.name].collections[collection].disabled_reason
       end
 
       representation.to_json
     end
 
     def add_to_collection(collection, json)
-      raise "collection not exists" if not rs_model.types[self.class.name].collections.include?(collection)
+      raise "collection not exists" if not ro_domain_model.types[self.class.name].collections.include?(collection)
       href_value = JSON.parse(json)['value']['href']
       match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
       raise "Invalid request format" if not match
       domain_type = match['domain-type']
       id = match['object-id'].to_i
-      raise "Value does not exists" if not rs_model.objects.include?(id)
-      raise "Domain-type does not exists" if not rs_model.types.include?(domain_type)
+      raise "Value does not exists" if not ro_domain_model.objects.include?(id)
+      raise "Domain-type does not exists" if not ro_domain_model.types.include?(domain_type)
 
-      send(collection.to_sym).push(rs_model.objects[id])
+      send(collection.to_sym).push(ro_domain_model.objects[id])
 
       get_collection_as_json(collection)
     end
 
     def delete_from_collection(collection, json)
-      raise "collection not exists" if not rs_model.types[self.class.name].collections.include?(collection)
+      raise "collection not exists" if not ro_domain_model.types[self.class.name].collections.include?(collection)
       href_value = JSON.parse(json)['value']['href']
       match = Regexp.new(".*/objects/(?<domain-type>\\w*)/(?<object-id>\\d*)").match(href_value)
       raise "Invalid request format" if not match
       domain_type = match['domain-type']
       id = match['object-id'].to_i
-      raise "Value does not exists" if not rs_model.objects.include?(id)
-      raise "Domain-type does not exists" if not rs_model.types.include?(domain_type)
+      raise "Value does not exists" if not ro_domain_model.objects.include?(id)
+      raise "Domain-type does not exists" if not ro_domain_model.types.include?(domain_type)
 
-      send(collection.to_sym).delete(rs_model.objects[id])
+      send(collection.to_sym).delete(ro_domain_model.objects[id])
 
       get_collection_as_json(collection)
     end

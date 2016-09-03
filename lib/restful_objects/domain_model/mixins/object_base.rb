@@ -7,19 +7,19 @@ module RestfulObjects::ObjectBase
     @ro_is_service = self.class.ancestors.include?(RestfulObjects::Service)
     @title         = "#{self.class.name} (#{object_id})"
 
-    rs_model.register_object(self) unless @ro_is_service
+    ro_domain_model.register_object(self) unless @ro_is_service
     rs_type.collections.each_value do |collection|
       instance_variable_set("@#{collection.id}".to_sym, Array.new)
     end
     on_after_create if respond_to?(:on_after_create)
   end
 
-  def rs_model
+  def ro_domain_model
     RestfulObjects::DomainModel.current
   end
 
   def rs_type
-    rs_model.types[self.class.name]
+    ro_domain_model.types[self.class.name]
   end
 
   def ro_is_service?
@@ -36,8 +36,8 @@ module RestfulObjects::ObjectBase
   def put_properties_and_get_representation(json)
     properties = JSON.parse(json)
     properties.each do |property, container|
-      raise 'property not exists' unless rs_model.types[self.class.name].properties.include?(property)
-      raise 'read-only property' if rs_model.types[self.class.name].properties[property].read_only
+      raise 'property not exists' unless ro_domain_model.types[self.class.name].properties.include?(property)
+      raise 'read-only property' if ro_domain_model.types[self.class.name].properties[property].read_only
       set_property_value(property, container['value'])
       on_after_update if respond_to?(:on_after_update)
     end
