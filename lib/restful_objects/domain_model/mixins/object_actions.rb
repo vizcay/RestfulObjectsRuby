@@ -6,7 +6,7 @@ module RestfulObjects
         members[name] = {
           'memberType' => 'action',
           'links' => [
-            !is_service ?
+            !ro_is_service? ?
               link_to(:details, "/objects/#{self.class.name}/#{object_id}/actions/#{name}", :object_action, action: name)
               :
               link_to(:details, "/services/#{self.class.name}/actions/#{name}", :object_action, action: name)
@@ -104,7 +104,7 @@ module RestfulObjects
     private
 
       def rs_invoke_link(action)
-        invoke_link = is_service ?
+        invoke_link = ro_is_service? ?
           link_to(:invoke, "/services/#{rs_type.id}/actions/#{action}/invoke", :action_result, action: action)
           :
           link_to(:invoke, "/objects/#{rs_type.id}/#{object_id}/actions/#{action}/invoke", :action_result, action: action)
@@ -116,7 +116,7 @@ module RestfulObjects
       end
 
       def rs_action_link(action)
-        if is_service
+        if ro_is_service?
           link_to(:self, "/services/#{self.class.name}/actions/#{action}", :object_action)
         else
           link_to(:self, "/objects/#{self.class.name}/#{object_id}/actions/#{action}", :object_action)
@@ -124,7 +124,7 @@ module RestfulObjects
       end
 
       def rs_action_up_link
-        if is_service
+        if ro_is_service?
           link_to(:up, "/services/#{rs_type.id}", :object)
         else
           link_to(:up, "/objects/#{self.class.name}/#{object_id}", :object)
@@ -132,4 +132,3 @@ module RestfulObjects
       end
   end
 end
-

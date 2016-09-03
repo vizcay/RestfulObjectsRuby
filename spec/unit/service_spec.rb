@@ -18,7 +18,7 @@ describe RestfulObjects::Service do
   it 'should be registered and created automatically ' do
     RestfulObjects::DomainModel.current.services.include?('ServiceTest').should be_true
     RestfulObjects::DomainModel.current.services['ServiceTest'].should_not be_nil
-    RestfulObjects::DomainModel.current.services['ServiceTest'].is_service.should be_true
+    RestfulObjects::DomainModel.current.services['ServiceTest'].ro_is_service?.should be_true
   end
 
   it 'should generate json for the service' do

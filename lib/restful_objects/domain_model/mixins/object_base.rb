@@ -1,20 +1,17 @@
 module RestfulObjects::ObjectBase
-  attr_accessor :is_service, :title
+  attr_accessor :title
 
   def initialize
     super
-    @ro_deleted = false
-    @is_service = self.class.ancestors.include?(RestfulObjects::Service)
-    @title      = "#{self.class.name} (#{object_id})"
-    rs_register_in_model
+    @ro_deleted    = false
+    @ro_is_service = self.class.ancestors.include?(RestfulObjects::Service)
+    @title         = "#{self.class.name} (#{object_id})"
+
+    rs_model.register_object(self) unless @ro_is_service
     rs_type.collections.each_value do |collection|
       instance_variable_set("@#{collection.id}".to_sym, Array.new)
     end
     on_after_create if respond_to?(:on_after_create)
-  end
-
-  def rs_register_in_model
-    rs_model.register_object(self) unless @is_service
   end
 
   def rs_model
@@ -23,6 +20,10 @@ module RestfulObjects::ObjectBase
 
   def rs_type
     rs_model.types[self.class.name]
+  end
+
+  def ro_is_service?
+    @ro_is_service
   end
 
   def get_representation
@@ -60,7 +61,7 @@ module RestfulObjects::ObjectBase
       'extensions' => rs_type.metadata
     }
 
-    unless is_service
+    unless ro_is_service?
       representation.delete('serviceId')
       representation['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
     else
@@ -72,7 +73,7 @@ module RestfulObjects::ObjectBase
   end
 
   def generate_members
-    if is_service
+    if ro_is_service?
       actions_members
     else
       properties_members.merge(collections_members.merge(actions_members))
