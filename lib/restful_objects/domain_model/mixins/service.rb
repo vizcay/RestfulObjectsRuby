@@ -9,10 +9,6 @@ module RestfulObjects
         extend ObjectMacros
         include ObjectBase
         include ObjectActions
-
-        def rs_register_in_model
-          # do_nothing
-        end
       end
 
       RestfulObjects::DomainModel.current.register_service(base)
