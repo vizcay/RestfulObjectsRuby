@@ -60,7 +60,7 @@ describe RestfulObjects::Service do
     class ServiceTest
       include RestfulObjects::Service
     end
-    instance_id = model.services['ServiceTest'].rs_instance_id
+    instance_id = model.services['ServiceTest'].ro_instance_id
     model.objects.include?(instance_id).should_not be_true
   end
 

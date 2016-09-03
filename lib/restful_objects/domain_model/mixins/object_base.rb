@@ -37,7 +37,7 @@ module RestfulObjects::ObjectBase
     @ro_deleted
   end
 
-  def rs_instance_id
+  def ro_instance_id
     object_id
   end
 

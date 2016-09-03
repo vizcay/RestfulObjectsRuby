@@ -86,7 +86,7 @@ module RestfulObjects
               [ link_to(:element_type, "/domain-types/#{action_description.result_type.to_s}", :domain_type) ]
             list = []
             result.each do |member|
-              member_link = link_to(:element, "/objects/#{action_description.result_type.to_s}/#{member.rs_instance_id}", :object)
+              member_link = link_to(:element, "/objects/#{action_description.result_type.to_s}/#{member.ro_instance_id}", :object)
               member_link['title'] = member.title
               list << member_link
             end

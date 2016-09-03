@@ -20,7 +20,7 @@ module RestfulObjects
 
       value = []
       send(collection.to_sym).each do |object|
-        link = link_to(:value, "/objects/#{object.ro_domain_type.id}/#{object.rs_instance_id}", :object, method: 'GET', collection: collection)
+        link = link_to(:value, "/objects/#{object.ro_domain_type.id}/#{object.ro_instance_id}", :object, method: 'GET', collection: collection)
         link['title'] = object.title
         value << link
       end
@@ -29,17 +29,17 @@ module RestfulObjects
         'id' => collection,
         'value' => value,
         'links' => [
-            link_to(:self, "/objects/#{ro_domain_type.id}/#{rs_instance_id}/collections/#{collection}", :object_collection),
-            link_to(:up, "/objects/#{ro_domain_type.id}/#{rs_instance_id}", :object)
+            link_to(:self, "/objects/#{ro_domain_type.id}/#{ro_instance_id}/collections/#{collection}", :object_collection),
+            link_to(:up, "/objects/#{ro_domain_type.id}/#{ro_instance_id}", :object)
           ],
         'extensions' => ro_domain_type.collections[collection].metadata
       }
 
       if not ro_domain_model.types[self.class.name].collections[collection].read_only then
-        add_to_link = link_to(:add_to, "/objects/#{ro_domain_type.id}/#{rs_instance_id}/collections/#{collection}",
+        add_to_link = link_to(:add_to, "/objects/#{ro_domain_type.id}/#{ro_instance_id}/collections/#{collection}",
                               :object_collection, method: 'PUT', collection: collection)
         add_to_link['arguments'] = { 'value' => nil }
-        remove_from_link = link_to(:remove_from, "/objects/#{ro_domain_type.id}/#{rs_instance_id}/collections/#{collection}",
+        remove_from_link = link_to(:remove_from, "/objects/#{ro_domain_type.id}/#{ro_instance_id}/collections/#{collection}",
                                    :object_collection, method: 'DELETE', collection: collection)
         remove_from_link['arguments'] = { 'value' => nil }
         representation['links'].concat [ add_to_link, remove_from_link ]
