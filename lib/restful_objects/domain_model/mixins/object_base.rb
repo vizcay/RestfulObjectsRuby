@@ -26,6 +26,21 @@ module RestfulObjects::ObjectBase
     @ro_is_service
   end
 
+  def ro_delete
+    on_before_delete if respond_to?(:on_before_delete)
+    @ro_deleted = true
+    on_after_delete if respond_to?(:on_after_delete)
+    {}.to_json
+  end
+
+  def ro_deleted?
+    @ro_deleted
+  end
+
+  def rs_instance_id
+    object_id
+  end
+
   def get_representation
     [200,
      { 'Content-Type' =>
@@ -45,10 +60,6 @@ module RestfulObjects::ObjectBase
      { 'Content-Type' =>
          "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
      representation(false).to_json]
-  end
-
-  def rs_instance_id
-    object_id
   end
 
   def representation(include_self_link = true)
@@ -84,17 +95,6 @@ module RestfulObjects::ObjectBase
     representation = link_to(:value, "/objects/#{self.class.name}/#{object_id}", :object, property: property_name)
     representation['title'] = @title
     representation
-  end
-
-  def ro_delete
-    on_before_delete if respond_to?(:on_before_delete)
-    @ro_deleted = true
-    on_after_delete if respond_to?(:on_after_delete)
-    {}.to_json
-  end
-
-  def ro_deleted?
-    @ro_deleted
   end
 
   def encode_value(value, type, property_name = '')
