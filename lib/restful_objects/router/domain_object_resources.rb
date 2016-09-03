@@ -15,7 +15,7 @@ module RestfulObjects
 
         # 14.3
         router.delete '/objects/:domain_type/:instance_id' do
-          objects[params[:instance_id].to_i].rs_delete
+          objects[params[:instance_id].to_i].ro_delete
         end
 
         # patch to allow cross-origin put & delete requests #

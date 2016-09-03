@@ -133,7 +133,7 @@ describe RestfulObjects::Object do
   end
 
   it 'should send on_after_delete callback when object is deleted' do
-    class DeletedObject
+    class TestDeleted
       include RestfulObjects::Object
       attr_reader :destroyed
       def on_after_delete
@@ -141,14 +141,14 @@ describe RestfulObjects::Object do
       end
     end
 
-    obj = DeletedObject.new
+    obj = TestDeleted.new
 
-    obj.deleted?.should_not be_true
+    obj.ro_deleted?.should_not be_true
     obj.destroyed.should_not be_true
 
     delete "/objects/DeletedObject/#{obj.object_id}"
 
-    obj.deleted?.should be_true
+    obj.ro_deleted?.should be_true
     obj.destroyed.should be_true
   end
 end
