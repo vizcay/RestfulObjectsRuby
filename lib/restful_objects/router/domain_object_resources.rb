@@ -5,12 +5,12 @@ module RestfulObjects
         # ** 14 Domain Object Resource & Representation **
         # 14.1
         router.get '/objects/:domain_type/:instance_id' do
-          objects[params[:instance_id].to_i].get_representation
+          objects[params[:instance_id].to_i].ro_get_representation_response
         end
 
         # 14.2
         router.put '/objects/:domain_type/:instance_id' do
-          objects[params[:instance_id].to_i].put_properties_and_get_representation(request.body.read)
+          objects[params[:instance_id].to_i].ro_put_properties_and_get_representation_response(request.body.read)
         end
 
         # 14.3
@@ -26,7 +26,7 @@ module RestfulObjects
 
         # C.15 Domain Services
         router.get "/services/:service_id" do
-          model.services[params[:service_id]].get_representation
+          model.services[params[:service_id]].ro_get_representation_response
         end
 
         # C.16 Property

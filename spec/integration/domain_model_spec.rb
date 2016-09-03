@@ -8,7 +8,7 @@ describe RestfulObjects::Object do
         property :name, :string
       end
       test_object = TestObject.new
-      response    = test_object.put_properties_and_get_representation({ 'name' => { 'value' => 'john smith' } }.to_json)
+      response    = test_object.ro_put_properties_and_get_representation_response({ 'name' => { 'value' => 'john smith' } }.to_json)
       expect(response.body).to match_json_expression({ 'members' => { 'name' => { 'value' => 'john smith' } } })
     end
 
@@ -20,9 +20,9 @@ describe RestfulObjects::Object do
         property :weight, :decimal
       end
       test_object = TestObject.new
-      response    = test_object.put_properties_and_get_representation({ 'name'   => { 'value' => 'john smith' },
-                                                                        'age'    => { 'value' => '29' },
-                                                                        'weight' => { 'value' => '71.5' } }.to_json)
+      response    = test_object.ro_put_properties_and_get_representation_response({ 'name'   => { 'value' => 'john smith' },
+                                                                                    'age'    => { 'value' => '29' },
+                                                                                    'weight' => { 'value' => '71.5' } }.to_json)
       expect(response.body).to match_json_expression({ 'members' => {
                                                          'name'   => { 'value' => 'john smith' },
                                                          'age'    => { 'value' => 29 },

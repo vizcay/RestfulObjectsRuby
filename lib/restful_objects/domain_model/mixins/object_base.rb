@@ -26,6 +26,10 @@ module RestfulObjects::ObjectBase
     @ro_is_service
   end
 
+  def ro_instance_id
+    object_id
+  end
+
   def ro_delete
     on_before_delete if respond_to?(:on_before_delete)
     @ro_deleted = true
@@ -37,53 +41,45 @@ module RestfulObjects::ObjectBase
     @ro_deleted
   end
 
-  def ro_instance_id
-    object_id
-  end
-
-  def get_representation
+  def ro_get_representation_response
     [200,
      { 'Content-Type' =>
          "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
-     representation.to_json]
+     ro_get_representation.to_json]
   end
 
-  def put_properties_and_get_representation(json)
-    properties = JSON.parse(json)
+  def ro_get_representation(include_self_link = true)
+    result = {
+      'title' => title,
+      'members' => ro_generate_members,
+      'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
+      'extensions' => ro_domain_type.metadata
+    }
+    if ro_is_service?
+      result['serviceId'] = self.class.name
+      result['links'] << link_to(:self, "/services/#{self.class.name}", :object) if include_self_link
+    else
+      result['instanceId'] = object_id.to_s
+      result['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
+    end
+    result
+  end
+
+  def ro_put_properties_and_get_representation_response(input)
+    properties = JSON.parse(input)
     properties.each do |property, container|
-      raise 'property not exists' unless ro_domain_model.types[self.class.name].properties.include?(property)
-      raise 'read-only property' if ro_domain_model.types[self.class.name].properties[property].read_only
+      raise 'property not exists' unless ro_domain_type.properties.include?(property)
+      raise 'read-only property' if ro_domain_type.properties[property].read_only
       set_property_value(property, container['value'])
       on_after_update if respond_to?(:on_after_update)
     end
     [200,
      { 'Content-Type' =>
          "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
-     representation(false).to_json]
+     ro_get_representation(false).to_json]
   end
 
-  def representation(include_self_link = true)
-    representation = {
-      'instanceId' => object_id.to_s,
-      'serviceId' => self.class.name,
-      'title' => title,
-      'members' => generate_members,
-      'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
-      'extensions' => ro_domain_type.metadata
-    }
-
-    unless ro_is_service?
-      representation.delete('serviceId')
-      representation['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
-    else
-      representation.delete('instanceId')
-      representation['links'] << link_to(:self, "/services/#{self.class.name}", :object) if include_self_link
-    end
-
-    representation
-  end
-
-  def generate_members
+  def ro_generate_members
     if ro_is_service?
       actions_members
     else
@@ -152,7 +148,7 @@ module RestfulObjects::ObjectBase
   end
 
   def ro_absolute_url
-    RestfulObjects::DomainModel.current.base_url + ro_relative_url
+    "#{ro_domain_model.base_url}#{ro_relative_url}"
   end
 
   def get_self_link

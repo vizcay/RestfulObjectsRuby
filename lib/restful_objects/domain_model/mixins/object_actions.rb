@@ -76,7 +76,7 @@ module RestfulObjects
             response['result']['links'] = [ link_to(:return_type, '/domain-types/int', :domain_type) ]
           when :object
             response['resultType'] = 'object'
-            response['result'] = result.representation
+            response['result'] = result.ro_get_representation
           when :proto_object
             response['resultType'] = 'object'
             response['result'] = result
