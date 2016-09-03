@@ -8,7 +8,7 @@ module RestfulObjects::ObjectBase
     @title         = "#{self.class.name} (#{object_id})"
 
     ro_domain_model.register_object(self) unless @ro_is_service
-    rs_type.collections.each_value do |collection|
+    ro_domain_type.collections.each_value do |collection|
       instance_variable_set("@#{collection.id}".to_sym, Array.new)
     end
     on_after_create if respond_to?(:on_after_create)
@@ -18,7 +18,7 @@ module RestfulObjects::ObjectBase
     RestfulObjects::DomainModel.current
   end
 
-  def rs_type
+  def ro_domain_type
     ro_domain_model.types[self.class.name]
   end
 
@@ -29,7 +29,7 @@ module RestfulObjects::ObjectBase
   def get_representation
     [200,
      { 'Content-Type' =>
-         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{rs_type.id}\"" },
+         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
      representation.to_json]
   end
 
@@ -43,7 +43,7 @@ module RestfulObjects::ObjectBase
     end
     [200,
      { 'Content-Type' =>
-         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{rs_type.id}\"" },
+         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
      representation(false).to_json]
   end
 
@@ -58,7 +58,7 @@ module RestfulObjects::ObjectBase
       'title' => title,
       'members' => generate_members,
       'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
-      'extensions' => rs_type.metadata
+      'extensions' => ro_domain_type.metadata
     }
 
     unless ro_is_service?

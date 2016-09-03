@@ -60,9 +60,9 @@ describe RestfulObjects::Object do
   end
 
   it 'should generate metadata in extensions' do
-    @object.rs_type.plural_name = 'Test Objects'
-    @object.rs_type.friendly_name = 'Test Object Friendly'
-    @object.rs_type.description = 'An object to test'
+    @object.ro_domain_type.plural_name = 'Test Objects'
+    @object.ro_domain_type.friendly_name = 'Test Object Friendly'
+    @object.ro_domain_type.description = 'An object to test'
 
     expected = {
       'instanceId' => @object.object_id.to_s,

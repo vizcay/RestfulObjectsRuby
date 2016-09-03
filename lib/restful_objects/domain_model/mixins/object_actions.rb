@@ -2,7 +2,7 @@ module RestfulObjects
   module ObjectActions
     def actions_members
       members = {}
-      rs_type.actions.each do |name, action|
+      ro_domain_type.actions.each do |name, action|
         members[name] = {
           'memberType' => 'action',
           'links' => [
@@ -21,13 +21,13 @@ module RestfulObjects
       { 'id' => action,
         'parameters' => generate_parameters(action),
         'links' => [ rs_action_link(action), rs_action_up_link, rs_invoke_link(action) ],
-        'extensions' => rs_type.actions[action].metadata
+        'extensions' => ro_domain_type.actions[action].metadata
       }.to_json
     end
 
     def generate_parameters(action)
       parameters = Hash.new
-      rs_type.actions[action].parameters.each do |name, parameter|
+      ro_domain_type.actions[action].parameters.each do |name, parameter|
         parameters[name] = {
           'links' => [],
           'extensions' => parameter.metadata
@@ -37,8 +37,8 @@ module RestfulObjects
     end
 
     def get_action_invoke(action, json)
-      raise 'action does not exists' if not rs_type.actions.include?(action)
-      action_description = rs_type.actions[action]
+      raise 'action does not exists' if not ro_domain_type.actions.include?(action)
+      action_description = ro_domain_type.actions[action]
       json == '' ? {} : arguments = JSON.parse(json)
       parameters = []
       action_description.parameters.each do |name, parameter|
@@ -105,11 +105,11 @@ module RestfulObjects
 
       def rs_invoke_link(action)
         invoke_link = ro_is_service? ?
-          link_to(:invoke, "/services/#{rs_type.id}/actions/#{action}/invoke", :action_result, action: action)
+          link_to(:invoke, "/services/#{ro_domain_type.id}/actions/#{action}/invoke", :action_result, action: action)
           :
-          link_to(:invoke, "/objects/#{rs_type.id}/#{object_id}/actions/#{action}/invoke", :action_result, action: action)
+          link_to(:invoke, "/objects/#{ro_domain_type.id}/#{object_id}/actions/#{action}/invoke", :action_result, action: action)
         invoke_link['arguments'] = {}
-        rs_type.actions[action].parameters.each do |name, action|
+        ro_domain_type.actions[action].parameters.each do |name, action|
           invoke_link['arguments'][name] = { 'value' => nil }
         end
         invoke_link
@@ -125,7 +125,7 @@ module RestfulObjects
 
       def rs_action_up_link
         if ro_is_service?
-          link_to(:up, "/services/#{rs_type.id}", :object)
+          link_to(:up, "/services/#{ro_domain_type.id}", :object)
         else
           link_to(:up, "/objects/#{self.class.name}/#{object_id}", :object)
         end

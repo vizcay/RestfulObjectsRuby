@@ -166,7 +166,7 @@ describe RestfulObjects::ObjectActions do
   end
 
   it 'should generate metadata in extensions' do
-    collection = @object.rs_type.collections['collection_full_metadata']
+    collection = @object.ro_domain_type.collections['collection_full_metadata']
     collection.friendly_name = 'Friendly Collection'
     collection.description = 'Collection Description'
     collection.plural_form = 'Collections'

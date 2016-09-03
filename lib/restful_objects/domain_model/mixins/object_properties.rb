@@ -2,7 +2,7 @@ module RestfulObjects
   module ObjectProperties
     def properties_members
       members = {}
-      rs_type.properties.each do |name, property|
+      ro_domain_type.properties.each do |name, property|
         members[name] = {
           'memberType' => 'property',
           'value' => get_property_value(name),
