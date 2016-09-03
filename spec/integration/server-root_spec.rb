@@ -69,7 +69,7 @@ describe '/' do
       include RestfulObjects::Service
     end
 
-    RestfulObjects::DomainModel.current.services['ServiceTest'].title = 'Service Test Title'
+    RestfulObjects::DomainModel.current.services['ServiceTest'].ro_title = 'Service Test Title'
 
     services_list = {
       'links' => [

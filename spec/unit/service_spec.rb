@@ -23,7 +23,7 @@ describe RestfulObjects::Service do
 
   it 'should generate json for the service' do
     service = RestfulObjects::DomainModel.current.services['ServiceTest']
-    service.title = 'Test Service'
+    service.ro_title = 'Test Service'
 
     expected = {
       'serviceId' => 'ServiceTest',
@@ -115,11 +115,11 @@ describe RestfulObjects::Service do
       def initialize
         super
         @init_called = true
-        @title = 'A title'
+        @ro_title = 'A title'
       end
     end
     model.services['InitializedService'].init_called.should be_true
-    model.services['InitializedService'].title.should eq 'A title'
+    model.services['InitializedService'].ro_title.should eq 'A title'
   end
 end
 

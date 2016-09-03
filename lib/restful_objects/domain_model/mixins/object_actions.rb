@@ -87,7 +87,7 @@ module RestfulObjects
             list = []
             result.each do |member|
               member_link = link_to(:element, "/objects/#{action_description.result_type.to_s}/#{member.ro_instance_id}", :object)
-              member_link['title'] = member.title
+              member_link['title'] = member.ro_title
               list << member_link
             end
             response['result']['value'] = list

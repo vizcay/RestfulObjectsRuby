@@ -130,7 +130,7 @@ module RestfulObjects
       values = []
       @services.each do |name, service|
         element = link_to(:service, "/services/#{name}", :object, service_id: name)
-        element['title'] = service.title
+        element['title'] = service.ro_title
         values << element
       end
       values

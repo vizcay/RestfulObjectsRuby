@@ -87,12 +87,12 @@ describe RestfulObjects::Object do
       def initialize
         super
         @init_called = true
-        @title = 'A title'
+        @ro_title = 'A title'
       end
     end
     obj = InitializedObject.new
     obj.init_called.should be_true
-    obj.title.should eq 'A title'
+    obj.ro_title.should eq 'A title'
   end
 
   it 'should send on_after_create callback when object is created' do

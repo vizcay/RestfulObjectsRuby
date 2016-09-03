@@ -21,7 +21,7 @@ module RestfulObjects
       value = []
       send(collection.to_sym).each do |object|
         link = link_to(:value, "/objects/#{object.ro_domain_type.id}/#{object.ro_instance_id}", :object, method: 'GET', collection: collection)
-        link['title'] = object.title
+        link['title'] = object.ro_title
         value << link
       end
 

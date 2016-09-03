@@ -60,7 +60,7 @@ describe 'DomainObject properties' do
               'href'   => "http://localhost/objects/ReferenceType/#{@referenced.object_id}",
               'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
               'method' => 'GET',
-              'title'  => @referenced.title
+              'title'  => @referenced.ro_title
             }
           }
         }
@@ -78,17 +78,17 @@ describe 'DomainObject properties' do
                 'href'   => "http://localhost/objects/ReferenceType/#{choices[0].object_id}",
                 'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
                 'method' => 'GET',
-                'title'  => choices[0].title },
+                'title'  => choices[0].ro_title },
               { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
                 'href'   => "http://localhost/objects/ReferenceType/#{choices[1].object_id}",
                 'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
                 'method' => 'GET',
-                'title'  => choices[1].title },
+                'title'  => choices[1].ro_title },
               { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
                 'href'   => "http://localhost/objects/ReferenceType/#{choices[2].object_id}",
                 'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
                 'method' => 'GET',
-                'title'  => choices[2].title }
+                'title'  => choices[2].ro_title }
             ]
           }
         }
@@ -104,7 +104,7 @@ describe 'DomainObject properties' do
               'href'   => "http://localhost/objects/ReferenceType/#{@referenced.object_id}",
               'type'   => 'application/json;profile="urn:org.restfulobjects:repr-types/object"',
               'method' => 'GET',
-              'title'  => @referenced.title
+              'title'  => @referenced.ro_title
             }
           }
         }

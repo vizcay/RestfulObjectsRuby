@@ -1,11 +1,11 @@
 module RestfulObjects::ObjectBase
-  attr_accessor :title
+  attr_accessor :ro_title
 
   def initialize
     super
     @ro_deleted    = false
     @ro_is_service = self.class.ancestors.include?(RestfulObjects::Service)
-    @title         = "#{self.class.name} (#{object_id})"
+    @ro_title      = "#{self.class.name} (#{object_id})"
 
     ro_domain_model.register_object(self) unless @ro_is_service
     ro_domain_type.collections.each_value do |collection|
@@ -50,7 +50,7 @@ module RestfulObjects::ObjectBase
 
   def ro_get_representation(include_self_link = true)
     result = {
-      'title' => title,
+      'title' => ro_title,
       'members' => ro_generate_members,
       'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
       'extensions' => ro_domain_type.metadata
@@ -79,17 +79,9 @@ module RestfulObjects::ObjectBase
      ro_get_representation(false).to_json]
   end
 
-  def ro_generate_members
-    if ro_is_service?
-      actions_members
-    else
-      properties_members.merge(collections_members.merge(actions_members))
-    end
-  end
-
   def get_property_rel_representation(property_name)
     representation = link_to(:value, "/objects/#{self.class.name}/#{object_id}", :object, property: property_name)
-    representation['title'] = @title
+    representation['title'] = ro_title
     representation
   end
 
@@ -153,5 +145,15 @@ module RestfulObjects::ObjectBase
 
   def get_self_link
     link_to(:self, ro_relative_url, :object)
+  end
+
+  private
+
+  def ro_generate_members
+    if ro_is_service?
+      actions_members
+    else
+      properties_members.merge(collections_members.merge(actions_members))
+    end
   end
 end
