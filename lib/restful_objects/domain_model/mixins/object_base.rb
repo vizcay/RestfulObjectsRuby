@@ -47,17 +47,6 @@ module RestfulObjects::ObjectBase
     [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation.to_json]
   end
 
-  def ro_put_properties_and_get_representation_response(input)
-    properties = JSON.parse(input)
-    properties.each do |name, value|
-      raise 'property not exists' unless ro_domain_type.properties.include?(name)
-      raise 'read-only property' if ro_domain_type.properties[name].read_only
-      set_property_value(name, value['value'])
-      on_after_update if respond_to?(:on_after_update)
-    end
-    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
-  end
-
   def encode_value(value, type, property_name = '')
     return nil if value.nil?
     case type
