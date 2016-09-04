@@ -19,7 +19,7 @@ module RestfulObjects
             choices = self.send("#{name}_choices")
             raise "value returned by #{name}_choices method should be an Array" unless choices.is_a?(Array)
             if property_description(name).is_reference
-              choices_json = choices.map { |object| object.get_property_rel_representation(name) }
+              choices_json = choices.map { |object| object.ro_property_relation_representation(name) }
             else
               choices_json = choices.map { |value| decode_value(value, property_type(name)) }
             end
@@ -55,7 +55,7 @@ module RestfulObjects
           choices = self.send("#{property}_choices")
           raise "value returned by #{property}_choices method should be an Array" unless choices.is_a?(Array)
           if property_description(property).is_reference
-            choices_json = choices.map { |object| object.get_property_rel_representation(property) }
+            choices_json = choices.map { |object| object.ro_property_relation_representation(property) }
           else
             choices_json = choices.map { |value| decode_value(value, property_type(property)) }
           end

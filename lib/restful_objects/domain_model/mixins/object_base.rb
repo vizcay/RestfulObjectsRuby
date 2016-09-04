@@ -58,12 +58,6 @@ module RestfulObjects::ObjectBase
     [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
   end
 
-  def get_property_rel_representation(property_name)
-    representation = link_to(:value, "/objects/#{self.class.name}/#{object_id}", :object, property: property_name)
-    representation['title'] = ro_title
-    representation
-  end
-
   def encode_value(value, type, property_name = '')
     return nil if value.nil?
     case type
@@ -80,8 +74,8 @@ module RestfulObjects::ObjectBase
       when :blob
         Base64.encode64(value).strip
       else
-        if value.respond_to?(:get_property_rel_representation)
-          value.get_property_rel_representation(property_name)
+        if value.respond_to?(:ro_property_relation_representation, true)
+          value.ro_property_relation_representation(property_name)
         else
           raise "encode_value unsupported property type: #{type}"
         end
@@ -150,5 +144,11 @@ module RestfulObjects::ObjectBase
     else
       properties_members.merge(collections_members.merge(actions_members))
     end
+  end
+
+  def ro_property_relation_representation(property_name)
+    representation = link_to(:value, "/objects/#{self.class.name}/#{object_id}", :object, property: property_name)
+    representation['title'] = ro_title
+    representation
   end
 end
