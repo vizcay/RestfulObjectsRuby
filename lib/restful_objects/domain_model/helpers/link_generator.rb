@@ -1,5 +1,7 @@
 module RestfulObjects
   module LinkGenerator
+      HTTP_OK = 200
+
       def link_to(rel, href, type, options = {})
         link = {
           'rel' => generate_rel(rel, options),
@@ -99,6 +101,10 @@ module RestfulObjects
 
       def underscore_to_hyphen_string(symbol)
         symbol.to_s.sub('_', '-')
+      end
+
+      def ro_content_type_for_object(domain_type)
+        "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{domain_type}\""
       end
   end
 end

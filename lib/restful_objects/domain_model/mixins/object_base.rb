@@ -1,6 +1,8 @@
 module RestfulObjects::ObjectBase
   attr_accessor :ro_title
 
+  HTTP_OK = 200
+
   def initialize
     super
     @ro_deleted    = false
@@ -19,7 +21,7 @@ module RestfulObjects::ObjectBase
   end
 
   def ro_domain_type
-    ro_domain_model.types[self.class.name]
+    @ro_domain_type ||= ro_domain_model.types[self.class.name]
   end
 
   def ro_is_service?
@@ -42,41 +44,18 @@ module RestfulObjects::ObjectBase
   end
 
   def ro_get_representation_response
-    [200,
-     { 'Content-Type' =>
-         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
-     ro_get_representation.to_json]
-  end
-
-  def ro_get_representation(include_self_link = true)
-    result = {
-      'title' => ro_title,
-      'members' => ro_generate_members,
-      'links' => [ link_to(:described_by, "/domain-types/#{self.class.name}", :domain_type) ],
-      'extensions' => ro_domain_type.metadata
-    }
-    if ro_is_service?
-      result['serviceId'] = self.class.name
-      result['links'] << link_to(:self, "/services/#{self.class.name}", :object) if include_self_link
-    else
-      result['instanceId'] = object_id.to_s
-      result['links'] << link_to(:self, "/objects/#{self.class.name}/#{object_id}", :object) if include_self_link
-    end
-    result
+    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation.to_json]
   end
 
   def ro_put_properties_and_get_representation_response(input)
     properties = JSON.parse(input)
-    properties.each do |property, container|
-      raise 'property not exists' unless ro_domain_type.properties.include?(property)
-      raise 'read-only property' if ro_domain_type.properties[property].read_only
-      set_property_value(property, container['value'])
+    properties.each do |name, value|
+      raise 'property not exists' unless ro_domain_type.properties.include?(name)
+      raise 'read-only property' if ro_domain_type.properties[name].read_only
+      set_property_value(name, value['value'])
       on_after_update if respond_to?(:on_after_update)
     end
-    [200,
-     { 'Content-Type' =>
-         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{ro_domain_type.id}\"" },
-     ro_get_representation(false).to_json]
+    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
   end
 
   def get_property_rel_representation(property_name)
@@ -147,7 +126,23 @@ module RestfulObjects::ObjectBase
     link_to(:self, ro_relative_url, :object)
   end
 
-  private
+  protected
+
+  def ro_get_representation(include_self_link = true)
+    result = {
+      'title' => ro_title,
+      'members' => ro_generate_members,
+      'links' => [ link_to(:described_by, "/domain-types/#{ro_domain_type.id}", :domain_type) ],
+      'extensions' => ro_domain_type.metadata }
+    if ro_is_service?
+      result['serviceId'] = ro_domain_type.id
+      result['links'] << link_to(:self, "/services/#{ro_domain_type.id}", :object) if include_self_link
+    else
+      result['instanceId'] = ro_instance_id.to_s
+      result['links'] << link_to(:self, "/objects/#{ro_domain_type.id}/#{ro_instance_id}", :object) if include_self_link
+    end
+    result
+  end
 
   def ro_generate_members
     if ro_is_service?
