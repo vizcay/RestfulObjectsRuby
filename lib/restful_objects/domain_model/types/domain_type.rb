@@ -81,7 +81,7 @@ module RestfulObjects
         end
       end
 
-      new_object.get_representation
+      new_object.ro_get_representation_response
     end
 
     def metadata
