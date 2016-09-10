@@ -31,7 +31,7 @@ module RestfulObjects
 
         # C.16 Property
         router.get "/objects/:domain_type/:instance_id/properties/:property_id" do
-          objects[params[:instance_id].to_i].get_property_as_json(params[:property_id])
+          objects[params[:instance_id].to_i].ro_get_property_response(params[:property_id])
         end
 
         router.put "/objects/:domain_type/:instance_id/properties/:property_id" do

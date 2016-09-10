@@ -12,6 +12,47 @@ module RestfulObjects::ObjectProperties
     [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
   end
 
+  def ro_get_property_response(name)
+    name     = String(name)
+    property = ro_domain_type.properties[name]
+    raise "Property '#{name} not exists" unless property
+
+    representation = {
+      name =>
+        { 'value' => get_property_value(name),
+          'links' => [
+            link_to(:self, "/objects/#{ro_domain_type.id}/#{ro_instance_id}/properties/#{name}", :object_property),
+            link_to(:up, "/objects/#{ro_domain_type.id}/#{ro_instance_id}", :object) ],
+          'extensions' => property.metadata
+        }
+    }
+
+    unless property.read_only then
+      representation[name]['links'] << link_to(:modify,
+                                               "/objects/#{ro_domain_type.id}/#{ro_instance_id}/properties/#{name}",
+                                               :object_property,
+                                               { property: name, method: 'PUT', arguments: { 'value' => nil } })
+      representation[name]['links'] << link_to(:clear,
+                                               "/objects/#{ro_domain_type.id}/#{ro_instance_id}/properties/#{name}",
+                                               :object_property,
+                                               { property: name, method: 'DELETE'})
+      if self.respond_to?("#{name}_choices")
+        choices = self.send("#{name}_choices")
+        raise "value returned by #{name}_choices method should be an Array" unless choices.is_a?(Array)
+        if property_description(name).is_reference
+          choices_json = choices.map { |object| object.ro_property_relation_representation(name) }
+        else
+          choices_json = choices.map { |value| decode_value(value, property_type(name)) }
+        end
+        representation[name]['choices'] = choices_json
+      end
+    else
+      representation[name]['disabledReason'] = property.disabled_reason
+    end
+
+    representation.to_json
+  end
+
   def properties_members
     members = {}
     ro_domain_type.properties.each do |name, property|
@@ -42,45 +83,6 @@ module RestfulObjects::ObjectProperties
     members
   end
 
-  def get_property_as_json(property)
-    property = property.to_s if property.is_a?(Symbol)
-    raise "Property not exists" if not ro_domain_model.types[self.class.name].properties.include?(property)
-
-    representation = {
-      property =>
-        { 'value' => get_property_value(property),
-          'links' => [
-            link_to(:self, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property),
-            link_to(:up, "/objects/#{self.class.name}/#{object_id}", :object) ],
-          'extensions' => ro_domain_model.types[self.class.name].properties[property].metadata
-        }
-    }
-
-    if not ro_domain_model.types[self.class.name].properties[property].read_only then
-      representation[property]['links'].concat [
-        link_to(:modify, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property,
-          { property: property, method: 'PUT', arguments: { 'value' => nil } }),
-        link_to(:clear, "/objects/#{self.class.name}/#{object_id}/properties/#{property}", :object_property,
-          { property: property, method: 'DELETE'} ) ]
-
-      if self.respond_to?("#{property}_choices")
-        choices = self.send("#{property}_choices")
-        raise "value returned by #{property}_choices method should be an Array" unless choices.is_a?(Array)
-        if property_description(property).is_reference
-          choices_json = choices.map { |object| object.ro_property_relation_representation(property) }
-        else
-          choices_json = choices.map { |value| decode_value(value, property_type(property)) }
-        end
-        representation[property]['choices'] = choices_json
-      end
-    else
-      representation[property]['disabledReason'] =
-        ro_domain_model.types[self.class.name].properties[property].disabled_reason
-    end
-
-    representation.to_json
-  end
-
   def put_property_as_json(property, json)
     property = property.to_s if property.is_a?(Symbol)
     raise 'property not exists' unless ro_domain_model.types[self.class.name].properties.include?(property)
@@ -89,7 +91,7 @@ module RestfulObjects::ObjectProperties
     value = JSON.parse(json)['value']
     set_property_value(property, value)
     on_after_update if respond_to?(:on_after_update)
-    get_property_as_json(property)
+    ro_get_property_response(property)
   end
 
   def clear_property(property)
@@ -98,7 +100,7 @@ module RestfulObjects::ObjectProperties
 
     send("#{property}=".to_sym, nil)
     on_after_update if respond_to?(:on_after_update)
-    get_property_as_json(property)
+    ro_get_property_response(property)
   end
 
   def property_description(property)
