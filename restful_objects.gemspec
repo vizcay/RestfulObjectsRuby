@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec",            "2.14.1"
   spec.add_development_dependency "rack-test",        "0.6.2"
   spec.add_development_dependency "json_expressions", "0.8.2"
+  spec.add_development_dependency "pry-byebug",       "3.4.0"
 
   spec.add_runtime_dependency "sinatra", "1.4.4"
 end
