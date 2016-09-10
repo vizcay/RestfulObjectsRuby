@@ -97,7 +97,7 @@ describe 'DomainObject properties' do
 
     it 'puts representation' do
       json = { 'value' => { 'href' => @referenced.ro_absolute_url } }.to_json
-      expect(@object.put_property_as_json(:reference, json).last).to match_json_expression(
+      expect(@object.ro_put_property_and_get_response(:reference, json).last).to match_json_expression(
         { 'reference' =>
           { 'value' =>
             { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',

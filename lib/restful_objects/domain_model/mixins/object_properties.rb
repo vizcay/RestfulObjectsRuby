@@ -84,15 +84,16 @@ module RestfulObjects::ObjectProperties
     members
   end
 
-  def put_property_as_json(property, json)
-    property = property.to_s if property.is_a?(Symbol)
-    raise 'property not exists' unless ro_domain_model.types[self.class.name].properties.include?(property)
-    raise 'read-only property' if ro_domain_model.types[self.class.name].properties[property].read_only
+  def ro_put_property_and_get_response(name, input)
+    name     = String(name)
+    property = ro_domain_type.properties[name]
+    return [HTTP_NOT_FOUND, { 'Warning' => "No such property #{name}" }, ''] unless property
+    return [HTTP_FORBIDDEN, { 'Warning' => "Read-only property #{name}" }, ''] if property.read_only
 
-    value = JSON.parse(json)['value']
-    set_property_value(property, value)
+    set_property_value(name, JSON.parse(input)['value'])
     on_after_update if respond_to?(:on_after_update)
-    ro_get_property_response(property)
+
+    ro_get_property_response(name)
   end
 
   def clear_property(property)

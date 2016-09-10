@@ -139,12 +139,12 @@ describe RestfulObjects::ObjectProperties do
       put "/objects/PropertiesTest/#{@object.object_id}/properties/#{name}", { 'value' => value }.to_json
     end
 
-    @object.string_prop.should  eq 'A string'
-    @object.int_prop.should     eq 1234
-    @object.bool_prop.should    eq true
-    @object.decimal_prop.should eq 333.33
-    @object.date_prop.should    eq Date.new(2012, 2, 29)
-    @object.blob_prop.should    eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9".force_encoding('ASCII-8BIT')
+    expect(@object.string_prop).to  eq 'A string'
+    expect(@object.int_prop).to     eq 1234
+    expect(@object.bool_prop).to    eq true
+    expect(@object.decimal_prop).to eq 333.33
+    expect(@object.date_prop).to    eq Date.new(2012, 2, 29)
+    expect(@object.blob_prop).to    eq "\xE5\xA5\xB4\x30\xF2\x8C\x71\xD9".force_encoding('ASCII-8BIT')
   end
 
   it 'should process a property put with json' do

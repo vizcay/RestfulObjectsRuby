@@ -35,7 +35,7 @@ module RestfulObjects
         end
 
         router.put "/objects/:domain_type/:instance_id/properties/:property_id" do
-          objects[params[:instance_id].to_i].put_property_as_json(params[:property_id], request.body.read)
+          objects[params[:instance_id].to_i].ro_put_property_and_get_response(params[:property_id], request.body.read)
         end
 
         router.delete "/objects/:domain_type/:instance_id/properties/:property_id" do

@@ -75,7 +75,7 @@ module RestfulObjects
 
       members.each do |name, value|
         if properties.include?(name) then
-          new_object.put_property_as_json(name, value.to_json)
+          new_object.ro_put_property_and_get_response(name, value.to_json)
         else
           raise "member of property '#{name}' not found in type '#{@id}'"
         end
