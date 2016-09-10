@@ -1,5 +1,6 @@
 module RestfulObjects::ObjectProperties
   HTTP_OK = 200
+  HTTP_NOT_FOUND = 404
 
   def ro_put_properties_and_get_representation_response(input)
     properties = JSON.parse(input)
@@ -15,7 +16,7 @@ module RestfulObjects::ObjectProperties
   def ro_get_property_response(name)
     name     = String(name)
     property = ro_domain_type.properties[name]
-    raise "Property '#{name} not exists" unless property
+    return [HTTP_NOT_FOUND, { 'Warning' => "No such property #{name}" }, ''] unless property
 
     representation = {
       name =>

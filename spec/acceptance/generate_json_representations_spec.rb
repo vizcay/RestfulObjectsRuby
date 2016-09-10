@@ -3,9 +3,7 @@ require_relative '../spec_helper'
 describe RestfulObjects::Object do
   before :each do
     RestfulObjects::DomainModel.current.reset
-  end
 
-  it 'generates json representation for a complex object' do
     class Address
     end
 
@@ -24,7 +22,9 @@ describe RestfulObjects::Object do
         super
       end
     end
+  end
 
+  it 'generates json representation for a complex object' do
     object          = ObjectTest.new
     object.password = 'secret_key'
     address         = Address.new
@@ -98,5 +98,13 @@ describe RestfulObjects::Object do
     expect(last_response.content_type).to eq CONTENT_TYPE
     expect(last_response.body).to         match_json_expression expected
   end
-end
 
+  describe 'properties interactions,' do
+    it 'returns "404 Not Found" when property is not registered' do
+      object = ObjectTest.new
+      get "/objects/ObjectTest/#{object.object_id}/properties/invalid_property"
+      expect(last_response.status).to             eq 404
+      expect(last_response.headers['Warning']).to eq "No such property invalid_property"
+    end
+  end
+end
