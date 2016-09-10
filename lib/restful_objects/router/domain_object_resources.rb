@@ -39,7 +39,7 @@ module RestfulObjects
         end
 
         router.delete "/objects/:domain_type/:instance_id/properties/:property_id" do
-          objects[params[:instance_id].to_i].clear_property(params[:property_id])
+          objects[params[:instance_id].to_i].ro_clear_property_and_get_response(params[:property_id])
         end
 
         # C.17 Collection #
