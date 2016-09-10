@@ -53,7 +53,7 @@ describe 'DomainObject properties' do
 
     it 'gets representation' do
       @object.reference = @referenced
-      expect(@object.ro_get_property_response(:reference)).to match_json_expression(
+      expect(@object.ro_get_property_response(:reference).last).to match_json_expression(
         { 'reference' =>
           { 'value' =>
             { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',
@@ -70,7 +70,7 @@ describe 'DomainObject properties' do
     it 'lists choices' do
       choices = [ReferenceType.new, ReferenceType.new, ReferenceType.new]
       @object.define_singleton_method(:reference_choices) { choices }
-      expect(@object.ro_get_property_response(:reference)).to match_json_expression(
+      expect(@object.ro_get_property_response(:reference).last).to match_json_expression(
         { 'reference' =>
           { 'value' => nil,
             'choices' => [
@@ -97,7 +97,7 @@ describe 'DomainObject properties' do
 
     it 'puts representation' do
       json = { 'value' => { 'href' => @referenced.ro_absolute_url } }.to_json
-      expect(@object.put_property_as_json(:reference, json)).to match_json_expression(
+      expect(@object.put_property_as_json(:reference, json).last).to match_json_expression(
         { 'reference' =>
           { 'value' =>
             { 'rel'    => 'urn:org.restfulobjects:rels/value;property="reference"',

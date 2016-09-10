@@ -50,7 +50,7 @@ module RestfulObjects::ObjectProperties
       representation[name]['disabledReason'] = property.disabled_reason
     end
 
-    representation.to_json
+    [HTTP_OK, { 'Content-Type' => ro_content_type_for_property }, representation.to_json]
   end
 
   def properties_members

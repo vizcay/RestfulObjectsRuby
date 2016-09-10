@@ -106,5 +106,9 @@ module RestfulObjects
       def ro_content_type_for_object(domain_type)
         "application/json;profile=\"urn:org.restfulobjects:repr-types/object\";x-ro-domain-type=\"#{domain_type}\""
       end
+
+      def ro_content_type_for_property
+        "application/json;profile=\"urn:org.restfulobjects:repr-types/object-property\""
+      end
   end
 end
