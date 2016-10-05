@@ -4,7 +4,7 @@ module RestfulObjects
       def self.registered(router)
         # B.5 Homepage
         router.get '/' do
-          model.get_homepage
+          model.get_homepage_representation_response
         end
 
         # B.6 User
@@ -19,7 +19,7 @@ module RestfulObjects
 
         # B.8 Version
         router.get '/version' do
-          model.get_version
+          model.get_version_representation_response
         end
 
         # B.9 Objects of Type Resource

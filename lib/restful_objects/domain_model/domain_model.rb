@@ -54,7 +54,11 @@ module RestfulObjects
       @types[name] = DomainType.new(name)
     end
 
-    def get_homepage
+    def get_homepage_representation_response
+      [HTTP_OK, { 'Content-Type' => 'application/json' }, get_homepage_representation.to_json]
+    end
+
+    def get_homepage_representation
       { 'links' => [
           link_to(:self, '/', :homepage),
           link_to(:user, '/user', :user),
@@ -62,15 +66,15 @@ module RestfulObjects
           link_to(:version, '/version', :version),
           link_to(:domain_types, '/domain-types', :type_list)
         ],
-       'extensions' => {}
-      }.to_json
+       'extensions' => {} }
     end
 
-    def get_version
-      { 'links' => [
-          link_to(:self, '/version', :version),
-          link_to(:up, '/', :homepage),
-        ],
+    def get_version_representation_response
+      [HTTP_OK, { 'Content-Type' => 'application/json' }, get_version_representation.to_json]
+    end
+
+    def get_version_representation
+      { 'links' => [ link_to(:self, '/version', :version), link_to(:up, '/', :homepage) ],
         'specVersion' => '1.0',
         'optionalCapabilities' => {
           'blobsClobs' => true,
@@ -79,8 +83,7 @@ module RestfulObjects
           'protoPersistentObjects' => true,
           'validateOnly' => false
         },
-        'extensions' => {}
-      }.to_json
+        'extensions' => {} }
     end
 
     def get_user
