@@ -131,7 +131,7 @@ module RestfulObjects::ObjectBase
     if ro_is_service?
       actions_members
     else
-      properties_members.merge(collections_members.merge(actions_members))
+      ro_properties_members.merge(collections_members.merge(actions_members))
     end
   end
 

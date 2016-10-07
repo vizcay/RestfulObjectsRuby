@@ -95,7 +95,7 @@ module RestfulObjects
     private
 
       def get_members
-        properties_members.merge(collections_members.merge(actions_members))
+        ro_properties_members.merge(collections_members.merge(actions_members))
       end
 
       def properties_members
