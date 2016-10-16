@@ -47,17 +47,6 @@ module RestfulObjects::ObjectProperties
     [HTTP_OK, { 'Content-Type' => ro_content_type_for_property }, representation.to_json]
   end
 
-  def ro_put_properties_and_get_representation_response(input)
-    properties = JSON.parse(input)
-    properties.each do |name, value|
-      raise 'property not exists' unless ro_domain_type.properties.include?(name)
-      raise 'read-only property' if ro_domain_type.properties[name].read_only
-      ro_set_property_as_json(name, value['value'])
-      on_after_update if respond_to?(:on_after_update)
-    end
-    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
-  end
-
   def ro_put_property_and_get_response(name, input)
     name     = String(name)
     property = ro_domain_type.properties[name]
@@ -68,6 +57,17 @@ module RestfulObjects::ObjectProperties
     on_after_update if respond_to?(:on_after_update)
 
     ro_get_property_response(name)
+  end
+
+  def ro_put_multiple_properties_and_get_response(input)
+    properties = JSON.parse(input)
+    properties.each do |name, value|
+      raise 'property not exists' unless ro_domain_type.properties.include?(name)
+      raise 'read-only property' if ro_domain_type.properties[name].read_only
+      ro_set_property_as_json(name, value['value'])
+      on_after_update if respond_to?(:on_after_update)
+    end
+    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object(ro_domain_type.id) }, ro_get_representation(false).to_json]
   end
 
   def ro_clear_property_and_get_response(name)

@@ -10,7 +10,7 @@ module RestfulObjects
 
         # 14.2
         router.put '/objects/:domain_type/:instance_id' do
-          objects[params[:instance_id].to_i].ro_put_properties_and_get_representation_response(request.body.read)
+          objects[params[:instance_id].to_i].ro_put_multiple_properties_and_get_response(request.body.read)
         end
 
         # 14.3
