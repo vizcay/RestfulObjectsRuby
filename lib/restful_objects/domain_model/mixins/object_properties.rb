@@ -72,13 +72,16 @@ module RestfulObjects::ObjectProperties
 
   def ro_clear_property_and_get_response(name)
     name = String(name)
-    property = ro_domain_type.properties[name]
-    return [HTTP_NOT_FOUND, { 'Warning' => "No such property #{name}" }, ''] unless property
-    return [HTTP_FORBIDDEN, { 'Warning' => "Read-only property #{name}" }, ''] if property.read_only
+    if !ro_get_property_metadata(name)
+      return [HTTP_NOT_FOUND, { 'Warning' => "No such property #{name}" }, '']
+    elsif ro_get_property_metadata(name).read_only
+      return [HTTP_FORBIDDEN, { 'Warning' => "Read-only property #{name}" }, '']
+    end
 
     send("#{name}=", nil)
+
     on_after_update if respond_to?(:on_after_update)
-    ro_get_property_response(name)
+    return ro_get_property_response(name)
   end
 
   protected
