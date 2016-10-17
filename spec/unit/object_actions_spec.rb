@@ -193,7 +193,7 @@ describe RestfulObjects::ObjectActions do
           'href' => "http://localhost/objects/ActionsTest/#{@object.object_id}/actions/get_nil_scalar/invoke",
           'type' => 'application/json;profile="urn:org.restfulobjects:repr-types/action-result"',
           'method' => 'GET',
-          'arguments' => nil }
+          'arguments' => { } }
       ],
       'resultType' => 'scalar',
       'result' => nil,
@@ -214,7 +214,7 @@ describe RestfulObjects::ObjectActions do
           'href' => "http://localhost/objects/ActionsTest/#{@object.object_id}/actions/get_object/invoke",
           'type' => 'application/json;profile="urn:org.restfulobjects:repr-types/action-result"',
           'method' => 'GET',
-          'arguments' => nil }
+          'arguments' => { } }
       ],
       'resultType' => 'object',
       'result' => {
@@ -245,7 +245,7 @@ describe RestfulObjects::ObjectActions do
           'href' => "http://localhost/objects/ActionsTest/#{@object.object_id}/actions/get_nil_object/invoke",
           'type' => 'application/json;profile="urn:org.restfulobjects:repr-types/action-result"',
           'method' => 'GET',
-          'arguments' => nil }
+          'arguments' => { } }
       ],
       'resultType' => 'object',
       'result' => nil,
@@ -266,7 +266,7 @@ describe RestfulObjects::ObjectActions do
           'href' => "http://localhost/objects/ActionsTest/#{@object.object_id}/actions/get_list/invoke",
           'type' => 'application/json;profile="urn:org.restfulobjects:repr-types/action-result"',
           'method' => 'GET',
-          'arguments' => nil }
+          'arguments' => { } }
       ],
       'resultType' => 'list',
       'result' => {
@@ -302,7 +302,7 @@ describe RestfulObjects::ObjectActions do
           'href' => "http://localhost/objects/ActionsTest/#{@object.object_id}/actions/get_nil_list/invoke",
           'type' => 'application/json;profile="urn:org.restfulobjects:repr-types/action-result"',
           'method' => 'GET',
-          'arguments' => nil }
+          'arguments' => { } }
       ],
       'resultType' => 'list',
       'result' => nil,
