@@ -67,22 +67,4 @@ module RestfulObjects::ObjectCollections
 
     return ro_get_collection_response(name)
   end
-
-  protected
-
-  def collections_members
-    members = {}
-    ro_domain_type.collections.each do |name, collection|
-      members[name] = {
-        'memberType' => 'collection',
-        'size' => ro_domain_type.collections.count,
-        'links' => [
-          link_to(:details, "/objects/#{self.class.name}/#{object_id}/collections/#{name}", :object_collection, collection: name)
-        ],
-        'extensions' => collection.metadata
-      }
-    end
-    members
-  end
-
 end

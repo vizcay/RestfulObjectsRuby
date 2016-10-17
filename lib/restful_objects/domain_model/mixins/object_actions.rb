@@ -86,23 +86,6 @@ module RestfulObjects::ObjectActions
 
   protected
 
-  def actions_members
-    members = {}
-    ro_domain_type.actions.each do |name, action|
-      members[name] = {
-        'memberType' => 'action',
-        'links' => [
-          !ro_is_service? ?
-            link_to(:details, "/objects/#{self.class.name}/#{object_id}/actions/#{name}", :object_action, action: name)
-            :
-            link_to(:details, "/services/#{self.class.name}/actions/#{name}", :object_action, action: name)
-        ],
-        'extensions' => action.metadata
-      }
-    end
-    members
-  end
-
   def generate_parameters(action_name)
     result = {}
     ro_get_action_type(action_name).parameters.each do |name, parameter|

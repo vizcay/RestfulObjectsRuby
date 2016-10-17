@@ -108,34 +108,4 @@ module RestfulObjects::ObjectProperties
       send "#{name}=".to_sym, decode_value(json, ro_get_property_metadata(name).return_type)
     end
   end
-
-  def ro_properties_members
-    members = {}
-    ro_domain_type.properties.each do |name, property|
-      members[name] = {
-        'memberType' => 'property',
-        'value' => ro_get_property_as_json(name),
-        'links' => [
-          link_to(:details, "/objects/#{self.class.name}/#{object_id}/properties/#{name}", :object_property, property: name)
-        ],
-        'extensions' => property.metadata
-      }
-
-      if property.read_only
-        members[name]['disabledReason'] = property.disabled_reason
-      else
-        if self.respond_to?("#{name}_choices")
-          choices = self.send("#{name}_choices")
-          raise "value returned by #{name}_choices method should be an Array" unless choices.is_a?(Array)
-          if ro_get_property_metadata(name).is_reference
-            choices_json = choices.map { |object| object.ro_property_relation_representation(name) }
-          else
-            choices_json = choices.map { |value| decode_value(value, ro_get_property_metadata(name).return_type) }
-          end
-          members[name]['choices'] = choices_json
-        end
-      end
-    end
-    members
-  end
 end

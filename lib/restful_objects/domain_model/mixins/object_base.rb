@@ -140,4 +140,66 @@ module RestfulObjects::ObjectBase
     representation['title'] = ro_title
     representation
   end
+
+  def ro_properties_members
+    members = {}
+    ro_domain_type.properties.each do |name, property|
+      members[name] = {
+        'memberType' => 'property',
+        'value' => ro_get_property_as_json(name),
+        'links' => [
+          link_to(:details, "/objects/#{self.class.name}/#{object_id}/properties/#{name}", :object_property, property: name)
+        ],
+        'extensions' => property.metadata
+      }
+
+      if property.read_only
+        members[name]['disabledReason'] = property.disabled_reason
+      else
+        if self.respond_to?("#{name}_choices")
+          choices = self.send("#{name}_choices")
+          raise "value returned by #{name}_choices method should be an Array" unless choices.is_a?(Array)
+          if ro_get_property_metadata(name).is_reference
+            choices_json = choices.map { |object| object.ro_property_relation_representation(name) }
+          else
+            choices_json = choices.map { |value| decode_value(value, ro_get_property_metadata(name).return_type) }
+          end
+          members[name]['choices'] = choices_json
+        end
+      end
+    end
+    members
+  end
+
+  def collections_members
+    members = {}
+    ro_domain_type.collections.each do |name, collection|
+      members[name] = {
+        'memberType' => 'collection',
+        'size' => ro_domain_type.collections.count,
+        'links' => [
+          link_to(:details, "/objects/#{self.class.name}/#{object_id}/collections/#{name}", :object_collection, collection: name)
+        ],
+        'extensions' => collection.metadata
+      }
+    end
+    members
+  end
+
+  def actions_members
+    members = {}
+    ro_domain_type.actions.each do |name, action|
+      members[name] = {
+        'memberType' => 'action',
+        'links' => [
+          !ro_is_service? ?
+            link_to(:details, "/objects/#{self.class.name}/#{object_id}/actions/#{name}", :object_action, action: name)
+            :
+            link_to(:details, "/services/#{self.class.name}/actions/#{name}", :object_action, action: name)
+        ],
+        'extensions' => action.metadata
+      }
+    end
+    members
+  end
 end
