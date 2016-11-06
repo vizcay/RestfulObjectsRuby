@@ -1,4 +1,6 @@
 module RestfulObjects::ObjectCollections
+  HTTP_OK = 200
+
   def ro_get_collection_type(name)
     ro_domain_type.collections[name]
   end
@@ -35,7 +37,7 @@ module RestfulObjects::ObjectCollections
       representation['disabledReason'] = ro_get_collection_type(name).disabled_reason
     end
 
-    representation.to_json
+    [HTTP_OK, { 'Content-Type' => ro_content_type_for_object_collection(ro_get_collection_type(name).type) }, representation.to_json]
   end
 
   def ro_add_to_collection_and_get_response(name, json)

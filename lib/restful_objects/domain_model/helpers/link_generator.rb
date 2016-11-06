@@ -110,5 +110,9 @@ module RestfulObjects
       def ro_content_type_for_property
         "application/json;profile=\"urn:org.restfulobjects:repr-types/object-property\""
       end
+
+      def ro_content_type_for_object_collection(element_type)
+        "application/json;profile=\"urn:org.restfulobjects:repr-types/object-collection\";x-ro-element-type=\"#{element_type}\""
+      end
   end
 end
