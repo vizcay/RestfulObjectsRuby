@@ -1,7 +1,6 @@
-# encoding: utf-8
 require_relative '../spec_helper'
 
-describe '/domain-types/:type/actions/:action' do
+describe '=> /domain-types/:type/actions/' do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
   end
@@ -40,4 +39,3 @@ describe '/domain-types/:type/actions/:action' do
     last_response.body.should match_json_expression expected
   end
 end
-

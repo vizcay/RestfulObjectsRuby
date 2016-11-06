@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe RestfulObjects::Object do
+describe '=> /objects/:type/:instance_id/properties/' do
   describe '#ro_put_multiple_properties_and_get_response' do
     it 'updates simple property' do
       class TestObject
@@ -31,4 +31,3 @@ describe RestfulObjects::Object do
     end
   end
 end
-

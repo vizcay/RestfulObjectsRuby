@@ -1,7 +1,6 @@
-# encoding: utf-8
 require_relative '../spec_helper'
 
-describe 'DomainObject properties' do
+describe '=> /domain-types/:type/properties/' do
   before(:all) do
     RestfulObjects::DomainModel.current.reset
   end
@@ -113,4 +112,3 @@ describe 'DomainObject properties' do
     end
   end
 end
-

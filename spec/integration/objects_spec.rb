@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe RestfulObjects::Object do
+describe '=> /objects/:type/' do
   before :each do
     RestfulObjects::DomainModel.current.reset
 
