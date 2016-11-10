@@ -103,7 +103,7 @@ describe '=> /objects/:type/:instance_id/collections/' do
   end
 
   describe 'PUT /objects/:type/:instance_id/collections/:collection' do
-    it 'appends objecto to collection with set semantics' do
+    it 'appends object to collection with set semantics' do
       collection = CollectionTest.new
       item       = ItemClass.new
 
