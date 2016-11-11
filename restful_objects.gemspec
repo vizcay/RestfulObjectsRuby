@@ -1,4 +1,3 @@
-# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'restful_objects/version'
@@ -28,4 +27,3 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "sinatra", "1.4.4"
 end
-
