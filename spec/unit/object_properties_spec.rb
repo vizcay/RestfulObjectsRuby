@@ -98,10 +98,27 @@ describe RestfulObjects::ObjectProperties do
     last_response.body.should match_json_expression expected
   end
 
-  it 'should enforce string property max_length' do
-    @object.name = 'x' * 10
-    @object.name.should eq('x' * 10)
-    expect { @object.name = 'x' * 11 }.to raise_error
+  before :all do
+    class SampleObject
+      include RestfulObjects::Object
+      property :prop, :string
+      property :read_only_prop, :string, read_only: true
+      property :max_length_prop, :string, max_length: 10
+    end
+  end
+
+  it 'creates accessor for property and sets instance variable' do
+    object = SampleObject.new
+    object.prop = 'test'
+    expect(object.instance_variable_get(:@prop)).to eq('test')
+  end
+
+  it 'enforcers string property read_only' do
+    expect { SampleObject.new.read_only_prop = 'xxx' }.to raise_error
+  end
+
+  it 'enforcers string property max_length' do
+    expect { SampleObject.new.max_length_prop = 'x' * 11 }.to raise_error
   end
 
   it 'should process different property types get' do
